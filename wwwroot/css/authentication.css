@@ -1,0 +1,114 @@
+﻿
+body {
+    background-color: #fdf2e9;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.auth-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 550px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+    .auth-container h2 {
+        color: #333333;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        letter-spacing: -0.5px; 
+    }
+
+    .auth-container p {
+        color: #888888;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-weight: 400;
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    column-gap: 20px;
+    row-gap: 15px;
+    text-align: left;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.login-mode {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 12px;
+    background-color: #fafafa;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+    input:focus {
+        outline: none;
+        border-color: #f28d61;
+    }
+
+.logo-img {
+    max-height: 150px;
+    margin-bottom: -25px;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: #f28d61;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.footer-text {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+    .footer-text a {
+        color: #f28d61;
+        text-decoration: none;
+        font-weight: bold;
+    }
