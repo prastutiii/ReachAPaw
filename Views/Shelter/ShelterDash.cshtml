@@ -1,5 +1,19 @@
 ﻿@{
     ViewData["Title"] = "ShelterDash";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
 }
 
-Shelter Dash
+<link rel="stylesheet" href="~/css/shelter/shelterdash.css" />
+
+<div class="welcome">
+    <h2>Welcome Back, Shelter Admin!</h2>
+    <h6> This is what's happening to our shelter lately.</h6>
+</div>
+
+<h3 class="dash">Dashboard</h3>
+<section class="stat-section">
+    <div class="stat-box"><p>Total Pets</p><h3>5000+</h3></div>
+    <div class="stat-box"><p>Total Adoptions</p><h3>5000+</h3></div>
+    <div class="stat-box"><p>Pending Requests</p><h3>5000+</h3></div>
+    <div class="stat-box"><p>Total Revenue</p><h3>5000+</h3></div>
+</section>

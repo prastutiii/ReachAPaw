@@ -1,0 +1,48 @@
+﻿@model IEnumerable<ReachAPaw.Models.PetModel>
+@{
+    ViewData["Title"] = "Adopt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/adopt.css" />
+
+<section class="hero-block">
+    <div class="hero-text">
+        <h1>Find Your <span class="highlight">Pawfect Companion.</span></h1> <i class="fas fa-paw"></i></h1>
+        <p>Browse our gallery of furry friends waiting for their forever homes. Every adoption saves a life.</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search pets by name or breed..." />
+        </div>
+    </div>
+</section>
+
+<section class="pet-showcase">
+    <div class="pet-grid">
+         @if (Model != null && Model.Any())
+        {
+            @foreach (var pet in Model)
+            {
+                <a class="pet-card" asp-controller="PetView" asp-action="PetView" asp-route-id="@pet.pet_id">
+                    <div class="photo-wrap">
+                        <img src=" @(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)" alt="@pet.pet_name">
+                        <span class="wishlist-heart">
+                            <i class="bi bi-heart" title="Add to Favorites"></i>
+                        </span>
+                    </div>
+                    <div class="pet-details">
+                        <div class="name-line">
+                            <h3 class="text">@pet.pet_name</h3>
+                            <span class="gender-tag">@pet.gender</span>
+                        </div>
+                        <p>@pet.age Years Old</p>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <p class="no-pets">No pets found matching your criteria.</p>
+        }
+    </div>
+</section>

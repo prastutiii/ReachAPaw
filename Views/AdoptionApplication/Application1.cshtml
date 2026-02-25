@@ -1,0 +1,91 @@
+﻿@model ReachAPaw.Models.PetModel
+@{
+    ViewData["Title"] = "Application1";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/user/application.css" />
+
+<div class="form-body">
+
+    <div class="form-container">
+
+        <div class="back-profile">
+            <a asp-controller="PetView" asp-action="PetView" asp-route-id="@Model.pet_id">
+                &lt; Back to @Model.pet_name's Profile
+            </a>
+        </div>
+
+        <div class="header-text">
+            <h1>Adopt @Model.pet_name</h1>
+            <p>Fill out this form and we'll get back to you within 2-3 business days.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="icons">
+                <i class="fas fa-user-circle active"></i>
+                <hr>
+                <i class="fas fa-home"></i>
+                <hr>
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill" style="width: 33%;"></div>
+            </div>
+        </div>
+
+        <div class="mini-pet-info">
+            <img src="@Model.image_url" alt="pet">
+            <div class="pet-meta">
+                <strong>@Model.pet_name, </strong>
+                <span>P's Animal Shelter, @Model.age Years Old</span>
+            </div>
+            <div class="fee-box">
+                <small>Adoption Fee</small>
+                <strong>Rs. @Model.fee</strong>
+            </div>
+        </div>
+
+        <form asp-controller="Application" asp-action="AdoptionFormStep2" method="get" class="form-card">
+            <input type="hidden" name="pet_id" value="@Model.pet_id" />
+
+            <div class="section-title">
+                <i class="fas fa-user-circle"></i>
+                <h2>Tell us about yourself</h2>
+            </div>
+
+            <div class="input-grid">
+                <div class="field">
+                    <label>Full Name: *</label>
+                    <input type="text" name="FullName" required />
+                </div>
+                <div class="field">
+                    <label>Email Address: *</label>
+                    <input type="email" name="Email" required />
+                </div>
+                <div class="field">
+                    <label>Phone Number: *</label>
+                    <input type="tel" name="Phone" required />
+                </div>
+                <div class="field">
+                    <label>City: *</label>
+                    <input type="text" name="City" required />
+                </div>
+                <div class="field full">
+                    <label>Full Address: *</label>
+                    <textarea name="Address" rows="4" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-btns">
+                <a asp-controller="AdoptionApplication" asp-action="Application2" asp-route-petId="@Model.pet_id">
+                    Next >>
+                </a>
+                <button type="submit" class="btn-solid">Continue &gt;</button>
+            </div>
+        </form>
+
+    </div>
+
+</div>

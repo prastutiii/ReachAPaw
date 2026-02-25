@@ -13,7 +13,6 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #fcf7f3;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -26,17 +25,13 @@ html, body {
     box-shadow: 0 0 0 0.1rem #ffffff, 0 0 0 0.25rem #258cfb;
 }
 
-/* Optional centered layout wrapper (use only if needed) */
-.page-wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /* Prevent footer overlap */
 body {
     margin-bottom: 60px;
+}
+
+.page-wrapper {
+    background: transparent;
 }
 
 /* Floating label placeholder styling */
@@ -50,3 +45,174 @@ body {
 .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* Navbar CSS */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+    margin-top: 0;
+    padding: 0;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+    .nav-links a {
+        text-decoration: none;
+        color: #59473e;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+        .nav-links a:hover {
+            color: #4a7c92; /* Accent Blue */
+        }
+
+.nav-icons {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #5d4037;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 0;
+}
+
+    .icon-btn:hover {
+        transform: scale(1.1);
+        color: #4a7c92;
+    }
+
+/* Mobile Responsive adjustment for Navbar */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; 
+    }
+}
+
+/* Footer CSS */
+.main-footer {
+    background-color: #334e5a; /* Deep Slate Blue */
+    color: #e0e7ea;
+    padding: 4rem 5% 2rem;
+    margin-top: 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-brand h3 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.footer-brand p {
+    line-height: 1.6;
+    font-size: 0.95rem;
+    max-width: 300px;
+}
+
+.footer-links h4 {
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.footer-links nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footer-links a {
+    color: #b0c4cc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+    .footer-links a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+/* Bottom Bar */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+    .footer-bottom p {
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+.socials {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.social-link {
+    color: #ffffff;
+    font-size: 1.2rem;
+    transition: opacity 0.2s;
+}
+
+    .social-link:hover {
+        opacity: 0.7;
+    }
+
+/* Responsive Footer */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+

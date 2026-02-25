@@ -1,6 +1,9 @@
 ﻿
 body {
-    background-color: #fdf2e9;
+    background-image: url('/assets/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;

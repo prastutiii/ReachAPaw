@@ -1,0 +1,44 @@
+﻿:root {
+    --text-dark: #432f26;
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-dark);
+}
+
+.frame {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .frame img {
+        width: 550px;
+        height: 400px; 
+        object-fit: cover; 
+        border-radius: 20px;
+        display: block;
+    }
+
+.drives-us-container {
+    background: url('/assets/bg.png');
+    background-position: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 32px;
+    margin: 0;
+}
+
+.section-description {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 800px; 
+    margin: 0 auto;
+    color: #555; 
+}

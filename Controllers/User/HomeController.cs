@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ReachAPaw.Controllers
+namespace ReachAPaw.Controllers.User
 {
     public class HomeController : Controller
     {

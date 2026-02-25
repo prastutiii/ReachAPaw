@@ -2,7 +2,7 @@
     ViewData["Title"] = "Login";
 }
 
-<link rel="stylesheet" href="~/css/authentication.css" />
+<link rel="stylesheet" href="~/css/user/authentication.css" />
 
 <div class="auth-container" style="max-width: 450px;">
     <img src="~/assets/logo.png" class="logo-img" alt="Logo" />
@@ -24,4 +24,9 @@
     </form>
 
     <p class="footer-text">Don't have an account? <a href="/Authentication/Register">Sign up</a></p>
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red; font-weight:bold;">@ViewBag.Error</p>
+    }
 </div>

@@ -10,6 +10,20 @@ namespace ReachAPaw.Data
         }
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<PetModel> Pets { get; set; }
+        public DbSet<ShelterModel> Shelters { get; set; }
+        public DbSet<AdoptionApplicationModel> AdoptionApplications { get; set; }
+        public DbSet<ApplicationDetailsModel> ApplicationDetails { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AdoptionApplicationModel>()
+                .HasOne(a => a.ApplicationDetails)
+                .WithOne(d => d.AdoptionApplications)
+                .HasForeignKey<ApplicationDetailsModel>(d => d.application_id)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

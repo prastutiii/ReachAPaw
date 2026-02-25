@@ -1,0 +1,243 @@
+﻿/* Layout Variables */
+:root {
+    --cream: #f9f4e8;
+    --brown: #5d4037;
+    --teal: #4a7c92;
+    --white: #ffffff;
+}
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: url('/assets/bg.png');
+    background-position: top center;
+    background-repeat: repeat-y;
+    background-size: auto;
+    background-color: #f9f4e8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+section {
+    width: 100%;
+    margin: 0;
+}
+
+/* Hero Section */
+.hero-block {
+    display: flex;
+    align-items: center;
+    padding: 60px 5%;
+    margin: 0;
+    background-color: var(--cream);
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+
+.hero-text {
+    flex: 1;
+    min-width: 320px;
+}
+
+.hero-frame {
+    flex: 1;
+    min-width: 320px;
+}
+
+    .hero-frame img {
+        width: 100%;
+        border-radius: 20px;
+    }
+
+.highlight {
+    color: var(--teal);
+}
+
+.mini-badge {
+    background: #e9e0c9;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* Impact Ribbon */
+.impact-ribbon {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    padding: 60px 5%;
+    text-align: center;
+    background: #ddcdc8;
+    gap: 40px;
+}
+
+.stat-box {
+    background: white;
+    border: 2px solid var(--brown);
+    border-radius: 20px;
+}
+
+/* Pet Showcase */
+.pet-showcase {
+    padding: 60px 5%;
+    background: url('/assets/bg.png');
+    background-position: center;
+}
+
+.heading-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.pet-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.photo-wrap {
+    position: relative;
+}
+
+    .photo-wrap img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+.wishlist-heart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #ff5a5f;
+}
+
+.pet-details {
+    padding: 20px;
+}
+
+.name-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gender-tag {
+    border: 1px solid #ddd;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+/* Journey Map */
+.journey-map {
+    padding: 80px 5%;
+    text-align: center;
+    background: #fffcf5;
+}
+
+.journey-steps {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    gap: 30px;
+}
+
+.step-item {
+    flex: 1;
+    min-width: 250px;
+}
+
+.step-icon {
+    font-size: 3rem;
+    color: var(--brown);
+    margin-bottom: 15px;
+}
+
+/* Event Hub */
+.event-hub {
+    padding: 60px 5%;
+    text-align: center;
+    background: #ddcdc8;
+}
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.event-card {
+    background: var(--white);
+    padding: 30px;
+    border: 2px solid var(--brown);
+    border-radius: 10px;
+}
+
+/* Invite Banner */
+.invite-banner {
+    background: var(--teal);
+    color: var(--white);
+    padding: 80px 5%;
+    text-align: center;
+}
+
+/* Buttons & Pills */
+.primary-pill {
+    background: var(--brown);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.ghost-pill {
+    border: 2px solid var(--brown);
+    color: var(--brown);
+    padding: 10px 26px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.solid-white-btn {
+    background: white;
+    color: var(--teal);
+    padding: 12px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.outline-white-btn {
+    border: 2px solid white;
+    color: white;
+    padding: 10px 26px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.center-btn {
+    text-align: center;
+    margin-top: 40px;
+}

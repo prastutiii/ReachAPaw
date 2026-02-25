@@ -1,0 +1,90 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: url('/assets/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Shelter NavMenu */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    background-image: url('/assets/menu4.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-right: 3px solid #382820;
+}
+
+/* The small square icon at the top */
+.logo {
+    width: 150px;
+    height: 45px;
+    margin: 20px 20px 30px 20px;
+}
+
+/* Navigation link list */
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 5px;
+    flex-direction: column;
+}
+    .nav-links a {
+        display: block;
+        padding: 15px 20px;
+        color: #382820;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+        /* Simple hover effect */
+        .nav-links a:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links a:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+/* Logout section at the bottom */
+.bottom-section {
+    border-top: 2px solid #382820;
+}
+
+.logout {
+    display: block;
+    padding: 20px;
+    color: #382820;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+    .logout:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+/* Shelter Layout */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 200px;
+    flex-grow: 1;
+    background-color: #fdf2e9;
+    padding: 40px;
+}

@@ -1,0 +1,118 @@
+﻿@model ReachAPaw.Models.PetModel
+@{
+    ViewData["Title"] = "PetView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/petview.css" />
+
+<main class="page-wrapper">
+    <div class="content-container">
+        <div class="top-nav">
+            <a href="javascript:history.back()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="pet-gallery-card">
+            <div class="main-image">
+                <img src="@(string.IsNullOrEmpty(Model.image_url) ? "/assets/placeholder.png" : Model.image_url)" alt="@Model.pet_name">
+                <button class="fav-heart"><i class="far fa-heart"></i></button>
+            </div>
+        </div>
+
+        <div class="details-layout">
+            <div class="info-main">
+                <div class="header-inline">
+                    <h1>@Model.pet_name</h1>
+                    <div class="adoption-fee">
+                        <small>Adoption Fee</small>
+                        <span>Rs. @Model.fee</span>
+                    </div>
+                </div>
+
+                <div class="badge-row">
+                    <span class="mini-badge">@Model.age Months</span>
+                    <span class="mini-badge">Dog</span>
+                    <span class="mini-badge">@Model.gender</span>
+                    <span class="mini-badge">@Model.location</span>
+                </div>
+
+                <div class="description-box">
+                    <h3>About @Model.pet_name</h3>
+                    <p>@Model.description</p>
+                </div>
+
+                <div class="steps-card">
+                    <h3>Adoption Steps</h3>
+                    <ul class="steps-list">
+                        <li><span class="check-box"></span> Submit Application</li>
+                        <li><span class="check-box"></span> Await Approval</li>
+                        <li><span class="check-box"></span> Confirm Adoption</li>
+                        <li><span class="check-box"></span> Welcome Home</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-sidebar">
+                <h3>Quick Stats</h3>
+
+                <div class="stat-group medical">
+                    <strong>Medical</strong>
+                    <ul>
+                        <li>
+                            <span class="label">Vaccinated</span>
+                            <span class="value">
+                                @(Model.is_vaccinated
+                                                                ? "Yes"
+                                        : "No")
+                            </span>
+                        </li>
+
+                        <li>
+                            <span class="label">Neutered/Spayed</span>
+                            <span class="value">
+                                @(Model.is_neutered
+                                                                ? "Yes" 
+                                        : "No")
+                            </span>
+                        </li>
+
+                        <li>
+                            <span class="label">Microchipped</span>
+                            <span class="value">
+                                @(Model.is_microchipped
+                                                                ? "Yes" 
+                                        : "No")
+                            </span>
+                        </li>
+
+                        <li>
+                            <span class="label">Health Status</span>
+                            <span class="value">@Model.health_status</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="stat-group social">
+                    <strong>Ideal Home</strong>
+                    <div class="badge-row">
+                        <span>@Model.ideal_home</span>
+                    </div>
+                </div>
+
+                <div class="stat-group shelter">
+                    <strong>Shelter Info</strong>
+                    <p><strong>P's Animal Shelter</strong></p>
+                    <p>Kathmandu, Nepal</p>
+                    <p>+977 9841000000</p>
+                </div>
+
+                <a asp-controller="AdoptionApplication" asp-action="Application1" asp-route-petId="@Model.pet_id">
+                    Adopt @Model.pet_name
+                </a>
+                <p class="social-proof">Over 500 families found their perfect pet through us!</p>
+            </div>
+        </div>
+    </div>
+</main>

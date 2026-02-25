@@ -1,0 +1,95 @@
+﻿@model ReachAPaw.Models.PetModel
+@{
+    ViewData["Title"] = "Application2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="~/css/user/application.css" />
+
+<div class="form-body">
+<div class="form-container">
+    <div class="back-profile">
+        <a asp-controller="PetView" asp-action="PetView" asp-route-id="@Model.pet_id">
+            &lt; Back to @Model.pet_name's Profile
+        </a>
+    </div>
+
+    <div class="header-text">
+        <h1>Adopt @Model.pet_name</h1>
+        <p>Fill out this form and we'll get back to you within 2-3 business days.</p>
+    </div>
+
+    <div class="progress-section">
+        <div class="icons">
+            <i class="fas fa-check-circle completed"></i>
+            <hr class="completed-line">
+            <i class="fas fa-home active"></i>
+            <hr>
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="bar-bg">
+            <div class="bar-fill" style="width: 66%;"></div>
+        </div>
+    </div>
+
+    <div class="mini-pet-info">
+        <img src="@Model.image_url" alt="pet">
+        <div class="pet-meta">
+            <strong>@Model.pet_name, </strong>
+            <span>P's Animal Shelter, @Model.age Years Old</span>
+        </div>
+        <div class="fee-box">
+            <small>Adoption Fee</small>
+            <strong>Rs. @Model.fee</strong>
+        </div>
+    </div>
+
+    <form asp-controller="Application" asp-action="AdoptionFormStep3" method="get" class="form-card">
+        @* DATA FROM STEP 1 (Hidden) *@
+        <input type="hidden" name="pet_id" value="@Model.pet_id" />
+        <input type="hidden" name="FullName" value="@Context.Request.Query["FullName"]" />
+        <input type="hidden" name="Email" value="@Context.Request.Query["Email"]" />
+        <input type="hidden" name="Phone" value="@Context.Request.Query["Phone"]" />
+        <input type="hidden" name="City" value="@Context.Request.Query["City"]" />
+        <input type="hidden" name="Address" value="@Context.Request.Query["Address"]" />
+
+        <div class="section-title">
+            <i class="fas fa-home"></i>
+            <h2>Your living situation</h2>
+        </div>
+
+        <div class="question-block">
+            <label>What type of home do you live in? *</label>
+            <div class="checkbox-grid">
+                <label class="check-item"><input type="checkbox" name="HomeType" value="House"> House</label>
+                <label class="check-item"><input type="checkbox" name="HomeType" value="Housing"> Housing</label>
+                <label class="check-item"><input type="checkbox" name="HomeType" value="Apartment"> Apartment</label>
+                <label class="check-item"><input type="checkbox" name="HomeType" value="Townhouse"> Townhouse</label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <label>Do you own or rent? *</label>
+            <div class="checkbox-grid">
+                <label class="check-item"><input type="checkbox" name="Ownership" value="Own"> Own</label>
+                <label class="check-item"><input type="checkbox" name="Ownership" value="Rent"> Rent</label>
+            </div>
+        </div>
+
+        <div class="boxed-checkboxes">
+            <div class="box-item">
+                <label><input type="checkbox" name="HasYard"> I have a yard or outdoor space</label>
+            </div>
+            <div class="box-item">
+                <label><input type="checkbox" name="HasChildren"> I have children at home</label>
+            </div>
+        </div>
+
+        <div class="form-btns">
+            <button type="button" class="btn-outline" onclick="history.back()">&lt; Back</button>
+            <button type="submit" class="btn-solid">Continue &gt;</button>
+        </div>
+    </form>
+</div>
+</div>

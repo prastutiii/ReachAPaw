@@ -1,0 +1,28 @@
+﻿.add {
+    width: 987px;
+    height: 60px;
+    background-color: #f2825a;
+    color: #463229;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 20px;
+    border: 2px solid #463229;
+    border-radius: 25px;
+}
+
+    .add:hover {
+        background-color: #8d817a;
+        color: #463229;
+        border: 2px solid #463229;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+.pet-container {
+    width: 980px;
+    height: 150px;
+    margin-top: 30px;
+    background-color: #d7b9b2;
+    border: 2px solid #463229;
+    border-radius: 20px;
+}

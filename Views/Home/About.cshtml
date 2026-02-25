@@ -1,25 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/about.css" />
+<link rel="stylesheet" href="~/css/user/about.css" />
+<link rel="stylesheet" href="~/css/user/home.css" />
+
 
 <main>
-    <section class="top-section">
-        <div class="top-content">
-            <span class="badge">About Reach.A.Paw</span>
-            <h1>We Believe Every Tail Deserves a <span>Happy Ending</span></h1>
-            <p>Paragraph</p>
-            <div class="top-btns">
-                <a href="#" class="btn btn-white">Adopt Now</a>
-                <a href="#" class="btn btn-outline">Contact Us</a>
+    <header class="hero-block">
+        <div class="hero-text">
+            <span class="mini-badge">About Reach.A.Paw</span>
+            <h1>We Believe Every Tail Deserves a <span class="highlight">Happy Ending</span></h1>
+            <p>paragraph.</p>
+            <div class="action-row">
+                <a href="#" class="primary-pill">Adopt a Pet</a>
+                <a href="#" class="ghost-pill">Contact Us</a>
             </div>
         </div>
-
-        <div class="top-image-area">
-            <img src="~/assets/dedication.png"  class="top-main-image"/>
+        <div class="frame">
+            <img src="~/assets/dedication.png" alt="img">
         </div>
-    </section>
+    </header>
 
     <section class="drives-us-container">
         <h2 class="section-title">Our Story</h2>

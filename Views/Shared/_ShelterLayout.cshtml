@@ -6,17 +6,21 @@
     <title>@ViewData["Title"] - Reach A Paw</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/shelter/shelter.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    @await Html.PartialAsync("_Navbar")
 </head>
 <body>
-    <main class="page-wrapper">
-        @RenderBody()
-    </main>
+    <div class="dashboard-container">
 
-    @await Html.PartialAsync("_Footer")
+        @await Html.PartialAsync("_ShelterNavMenu")
 
+        @* --- Main Content Area --- *@
+        <main class="main-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

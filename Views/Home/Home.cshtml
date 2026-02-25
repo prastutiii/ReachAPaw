@@ -1,9 +1,112 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="~/css/user/home.css" />
 
-Home Page
+<header class="hero-block">
+    <div class="hero-text">
+        <span class="mini-badge">Find your Pawfect Companion</span>
+        <h1>Every Pet Deserves a <span class="highlight">Loving Home</span></h1>
+        <p>Join our mission to connect every animal with a family that cares. We help you find the friend you've been waiting for.</p>
+        <div class="action-row">
+            <a href="#" class="primary-pill">Adopt a Pet</a>
+            <a href="#" class="ghost-pill">Learn More &rarr;</a>
+        </div>
+        <p class="waiting-counter">🐾 1500+ pets waiting</p>
+    </div>
+    <div class="hero-frame">
+        <img src="~/assets/animals.png" alt="img">
+    </div>
+</header>
 
-<a href="/Authentication/Login">Login</a>
+<section class="impact-ribbon">
+    <div class="stat-box"><h3>5000+</h3><p>Pets Adopted</p></div>
+    <div class="stat-box"><h3>3500+</h3><p>Happy Families</p></div>
+    <div class="stat-box"><h3>600+</h3><p>Partner Shelters</p></div>
+    <div class="stat-box"><h3>900+</h3><p>Community Members</p></div>
+</section>
 
-<a href="/Home/About">About</a>
+<section class="pet-showcase">
+    <div class="heading-center">
+        <span class="mini-badge">Find Your Match</span>
+        <h2>Adorable Pets Waiting for You</h2>
+    </div>
+
+    <div class="pet-grid">
+        <div class="pet-card">
+            <div class="photo-wrap">
+                <img src="https://placehold.co/300x300/e0e0e0/666?text=Max" alt="Max">
+                <button class="wishlist-heart"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="pet-details">
+                <div class="name-line"><strong>Max</strong> <span class="gender-tag">Male</span></div>
+                <p>6 months</p>
+            </div>
+        </div>
+
+        <div class="pet-card">
+            <div class="photo-wrap">
+                <img src="https://placehold.co/300x300/e0e0e0/666?text=Pluto" alt="Pluto">
+                <button class="wishlist-heart"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="pet-details">
+                <div class="name-line"><strong>Pluto</strong> <span class="gender-tag">Male</span></div>
+                <p>1 year</p>
+            </div>
+        </div>
+
+        <div class="pet-card">
+            <div class="photo-wrap">
+                <img src="https://placehold.co/300x300/e0e0e0/666?text=Coco" alt="Coco">
+                <button class="wishlist-heart"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="pet-details">
+                <div class="name-line"><strong>Coco</strong> <span class="gender-tag">Female</span></div>
+                <p>3 years</p>
+            </div>
+        </div>
+    </div>
+    <div class="center-btn">
+        <a href="#" class="ghost-pill">View All Pets</a>
+    </div>
+</section>
+
+<section class="journey-map">
+    <h2>Your Adoption Journey</h2>
+    <div class="journey-steps">
+        <div class="step-item">
+            <div class="step-icon"><i class="bi bi-search"></i></div>
+            <h3>Browse & Connect</h3>
+            <p>Find your furry soulmate through our verified listings.</p>
+        </div>
+        <div class="step-item">
+            <div class="step-icon"><i class="bi bi-chat-heart"></i></div>
+            <h3>Meet & Greet</h3>
+            <p>Schedule a visit to build a connection with your pet.</p>
+        </div>
+        <div class="step-item">
+            <div class="step-icon"><i class="bi bi-house-heart"></i></div>
+            <h3>Welcome Home</h3>
+            <p>Finalize the paperwork and start your life together.</p>
+        </div>
+    </div>
+</section>
+
+<section class="event-hub">
+    <h2>Community Events</h2>
+    <div class="event-grid">
+        <div class="event-card">
+            <h3>Weekend Adoption Fair</h3>
+            <p>Join us this Saturday for a meet-and-greet at Central Park.</p>
+        </div>
+        <div class="event-card">
+            <h3>Free Vaccination Drive</h3>
+            <p>Protect your pets! Free shots for all community members.</p>
+        </div>
+        <div class="event-card">
+            <h3>Pet Care Workshop</h3>
+            <p>Learn tips and tricks for new pet parents from experts.</p>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,157 @@
+﻿.hero-block {
+    display: flex;
+    align-items: center;
+    padding: 60px 5%;
+    margin: 0;
+    background-color: #f9f4e8;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+
+.hero-text {
+    flex: 1;
+    min-width: 320px;
+}
+
+.highlight {
+    color: #4a7c92;
+}
+
+/* Container for the search bar */
+.search-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.pet-showcase {
+    padding: 60px 5%;
+    background-color: #ddcdc8;
+}
+
+.heading-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.pet-card {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 300px;
+    height: 400px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    pointer-events: auto;
+    z-index: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .pet-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 15px rgba(0,0,0,0.15);
+    }
+
+.photo-wrap {
+    position: relative;
+}
+
+    .photo-wrap img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        pointer-events: auto;
+    }
+
+.wishlist-heart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #ff5a5f;
+}
+
+.pet-details {
+    padding: 20px;
+}
+
+.name-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gender-tag {
+    border: 1px solid #ddd;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+
+
+    .wishlist-heart {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        color: #ff4d4d;
+    }
+
+    .pet-details {
+        padding: 15px;
+    }
+
+    .name-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .text {
+        color: #5d4037;
+        text-decoration: none;
+    }
+
+    .gender-tag {
+        font-size: 0.8rem;
+        background: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 5px;
+        color: #5d4037;
+    }
+    /* Blue Banner */
+    .invite-banner {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .cta-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+}
