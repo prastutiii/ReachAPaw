@@ -45,9 +45,9 @@
         </div>
     </div>
 
-    <form asp-controller="Application" asp-action="AdoptionFormStep3" method="get" class="form-card">
-        @* DATA FROM STEP 1 (Hidden) *@
-        <input type="hidden" name="pet_id" value="@Model.pet_id" />
+        <form asp-controller="AdoptionApplication" asp-action="Application3" method="get" class="form-card">
+            @* DATA FROM STEP 1 (Hidden) *@
+        <input type="hidden" name="petId" value="@Model.pet_id" />
         <input type="hidden" name="FullName" value="@Context.Request.Query["FullName"]" />
         <input type="hidden" name="Email" value="@Context.Request.Query["Email"]" />
         <input type="hidden" name="Phone" value="@Context.Request.Query["Phone"]" />
@@ -59,23 +59,23 @@
             <h2>Your living situation</h2>
         </div>
 
-        <div class="question-block">
-            <label>What type of home do you live in? *</label>
-            <div class="checkbox-grid">
-                <label class="check-item"><input type="checkbox" name="HomeType" value="House"> House</label>
-                <label class="check-item"><input type="checkbox" name="HomeType" value="Housing"> Housing</label>
-                <label class="check-item"><input type="checkbox" name="HomeType" value="Apartment"> Apartment</label>
-                <label class="check-item"><input type="checkbox" name="HomeType" value="Townhouse"> Townhouse</label>
-            </div>
-        </div>
+       <div class="question-block">
+    <label>What type of home do you live in? *</label>
+    <div class="checkbox-grid">
+        <label class="check-item"><input type="radio" name="HomeType" value="House" required> House</label>
+        <label class="check-item"><input type="radio" name="HomeType" value="Housing"> Housing</label>
+        <label class="check-item"><input type="radio" name="HomeType" value="Apartment"> Apartment</label>
+        <label class="check-item"><input type="radio" name="HomeType" value="Townhouse"> Townhouse</label>
+    </div>
+</div>
 
-        <div class="question-block">
-            <label>Do you own or rent? *</label>
-            <div class="checkbox-grid">
-                <label class="check-item"><input type="checkbox" name="Ownership" value="Own"> Own</label>
-                <label class="check-item"><input type="checkbox" name="Ownership" value="Rent"> Rent</label>
-            </div>
-        </div>
+<div class="question-block">
+    <label>Do you own or rent? *</label>
+    <div class="checkbox-grid">
+        <label class="check-item"><input type="radio" name="Ownership" value="Own" required> Own</label>
+        <label class="check-item"><input type="radio" name="Ownership" value="Rent"> Rent</label>
+    </div>
+</div>
 
         <div class="boxed-checkboxes">
             <div class="box-item">
@@ -88,7 +88,7 @@
 
         <div class="form-btns">
             <button type="button" class="btn-outline" onclick="history.back()">&lt; Back</button>
-            <button type="submit" class="btn-solid">Continue &gt;</button>
+                <button type="submit" class="btn-solid">Next >></button>
         </div>
     </form>
 </div>

@@ -47,8 +47,8 @@
             </div>
         </div>
 
-        <form asp-controller="Application" asp-action="AdoptionFormStep2" method="get" class="form-card">
-            <input type="hidden" name="pet_id" value="@Model.pet_id" />
+        <form asp-controller="AdoptionApplication" asp-action="Application2" method="get" class="form-card">
+            <input type="hidden" name="petId" value="@Model.pet_id" />
 
             <div class="section-title">
                 <i class="fas fa-user-circle"></i>
@@ -79,10 +79,8 @@
             </div>
 
             <div class="form-btns">
-                <a asp-controller="AdoptionApplication" asp-action="Application2" asp-route-petId="@Model.pet_id">
-                    Next >>
-                </a>
-                <button type="submit" class="btn-solid">Continue &gt;</button>
+                <button type="button" class="btn-outline" onclick="history.back()">&lt; Back</button>
+                <button type="submit" class="btn-solid">Next >></button>
             </div>
         </form>
 

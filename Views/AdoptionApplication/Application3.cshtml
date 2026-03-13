@@ -1,0 +1,103 @@
+﻿@model ReachAPaw.Models.PetModel
+@{
+    ViewData["Title"] = "Application3";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="~/css/user/application.css" />
+
+<div class="form-body">
+<div class="form-container">
+    <div class="back-profile">
+        <a asp-controller="PetView" asp-action="PetView" asp-route-id="@Model.pet_id">
+            &lt; Back to @Model.pet_name's Profile
+        </a>
+    </div>
+
+    <div class="header-text">
+        <h1>Adopt @Model.pet_name</h1>
+        <p>Fill out this form and we'll get back to you within 2-3 business days.</p>
+    </div>
+
+    <div class="progress-section">
+        <div class="icons">
+            <i class="fas fa-check-circle completed"></i>
+            <hr class="completed-line">
+            <i class="fas fa-check-circle completed"></i>
+            <hr class="completed-line">
+            <i class="fas fa-heart active"></i>
+        </div>
+        <div class="bar-bg">
+            <div class="bar-fill" style="width: 100%;"></div>
+        </div>
+    </div>
+
+    <div class="mini-pet-info">
+        <img src="@Model.image_url" alt="pet">
+        <div class="pet-meta">
+            <strong>@Model.pet_name, </strong>
+            <span>P's Animal Shelter, @Model.age Years Old</span>
+        </div>
+        <div class="fee-box">
+            <small>Adoption Fee</small>
+            <strong>Rs. @Model.fee</strong>
+        </div>
+    </div>
+
+    @* FINAL SUBMIT: Use POST and enctype for file upload *@
+    <form asp-controller="AdoptionApplication" asp-action="SubmitApplication" method="post" enctype="multipart/form-data" class="form-card">
+
+        @* HIDDEN DATA FROM STEP 1 & 2 *@
+        <input type="hidden" name="petId" value="@Model.pet_id" />
+        <input type="hidden" name="FullName" value="@Context.Request.Query["FullName"]" />
+        <input type="hidden" name="Email" value="@Context.Request.Query["Email"]" />
+        <input type="hidden" name="Phone" value="@Context.Request.Query["Phone"]" />
+        <input type="hidden" name="City" value="@Context.Request.Query["City"]" />
+        <input type="hidden" name="Address" value="@Context.Request.Query["Address"]" />
+        <input type="hidden" name="HomeType" value="@Context.Request.Query["HomeType"]" />
+        <input type="hidden" name="Ownership" value="@Context.Request.Query["Ownership"]" />
+        <input type="hidden" name="HasYard" value="@Context.Request.Query["HasYard"]" />
+        <input type="hidden" name="HasChildren" value="@Context.Request.Query["HasChildren"]" />
+
+        <div class="section-title">
+            <i class="fas fa-heart"></i>
+            <h2>Pet experiences & documents</h2>
+        </div>
+
+        <div class="box-item full-width-box">
+            <label><input type="checkbox" name="CurrentlyHasPets"> I currently have other pets</label>
+        </div>
+
+        <div class="field full">
+            <label>Previous pet experience:</label>
+            <textarea name="PreviousExperience" rows="4"></textarea>
+        </div>
+
+        <div class="field full">
+            <label>Why do you want to adopt @Model.pet_name? *</label>
+            <textarea name="ReasonToAdopt" rows="4" required></textarea>
+        </div>
+
+        <div class="field full">
+            <label>Upload ID Proof: *</label>
+            <div class="upload-area">
+                <input type="file" name="IDProof" id="idProof" required hidden />
+                <label for="idProof" class="upload-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Click to upload or drag and drop</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="terms-check">
+            <label><input type="checkbox" required> I agree to the adoption terms & conditions *</label>
+        </div>
+
+        <div class="form-btns">
+            <button type="button" class="btn-outline" onclick="history.back()">&lt; Back</button>
+            <button type="submit" class="btn-solid">Submit Application</button>
+        </div>
+    </form>
+</div>
+</div>

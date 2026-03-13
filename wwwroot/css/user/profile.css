@@ -1,0 +1,101 @@
+﻿:root {
+    --cream: #f9f4e8;
+    --brown: #5d4037;
+    --teal: #4a7c92;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background-position: top center;
+    background-repeat: repeat-y;
+    background-size: auto;
+    background-color: #f9f4e8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Card Customization */
+.card {
+    border-radius: 8px;
+    border: 1.5px solid #212529; /* Matches wireframe stroke */
+    transition: transform 0.2s ease-in-out;
+}
+
+.shadow-sm {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Profile Image Placeholder */
+.profile-img-container {
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid #dee2e6;
+}
+
+/* Community Post Styling */
+.community-post {
+    background-color: #fff9f0; /* Slight warm tint for posts */
+    border: 1px solid #212529;
+    border-radius: 4px;
+}
+
+    .community-post:hover {
+        background-color: #fff4e6;
+    }
+
+/* Action Buttons */
+.btn-outline-dark {
+    border-width: 1.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #212529;
+        color: #fff;
+    }
+
+/* Footer CTA Section */
+.cta-section {
+    background-color: #4a819b !important; /* Muted teal/blue from wireframe */
+    color: #ffffff;
+    padding: 60px 20px;
+    border-top: 2px solid #365f72;
+}
+
+    .cta-section h2 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+    }
+
+    .cta-section .btn-light {
+        background-color: #ffffff;
+        color: #4a819b;
+        border: 1px solid #212529;
+        font-weight: 600;
+        padding: 12px 30px;
+    }
+
+        .cta-section .btn-light:hover {
+            background-color: #e9ecef;
+        }
+
+/* Navigation & Links */
+.see-all-link {
+    font-size: 0.9rem;
+    color: #4a819b;
+    transition: color 0.2s;
+}
+
+    .see-all-link:hover {
+        color: #365f72;
+        text-decoration: underline !important;
+    }

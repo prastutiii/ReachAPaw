@@ -17,10 +17,11 @@ namespace ReachAPaw.Models
         Rent = 1
     }
 
+    [Table("ApplicationDetails")]
     public class ApplicationDetailsModel
     {
         [Key]
-        [ForeignKey("AdoptionApplication")]
+        [ForeignKey("AdoptionApplications")]
         public int application_id { get; set; }   // PK + FK to AdoptionApplication
 
         [Required]

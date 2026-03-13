@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReachAPaw.Models
 {
+    [Table("AdoptionApplication")]
     public class AdoptionApplicationModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int application_id { get; set; }   // PK
+        public int adoption_id { get; set; }   // PK
 
         [Required]
         [StringLength(50)]
@@ -27,6 +28,9 @@ namespace ReachAPaw.Models
 
         [Required]
         public int pet_id { get; set; }
+
+        [Required]
+        public int application_id { get; set; }
 
         // Navigation property to details
         public virtual ApplicationDetailsModel ApplicationDetails { get; set; }

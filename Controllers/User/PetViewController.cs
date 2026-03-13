@@ -17,7 +17,9 @@ namespace ReachAPaw.Controllers.User
 
         public async Task<IActionResult> PetView(int id)
         {
-            var pet = await _context.Pets.FirstOrDefaultAsync(p => p.pet_id == id);
+            var pet = _context.Pets
+              .Include(p => p.Shelters)
+              .FirstOrDefault(p => p.pet_id == id);
             if (pet == null) return NotFound();
 
             return View(pet);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ReachAPaw.Data;
 
@@ -12,7 +13,17 @@ builder.Services.AddDbContext<RapDbContext>(options =>
     )
 );
 
-//Implememting sessions
+// Configuring cookie settings for authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Authentication/Login";
+        options.AccessDeniedPath = "/Home/Home";
+    });
+
+builder.Services.AddAuthorization();
+
+// Implememting sessions
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -32,7 +43,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//Using middleware
+// Using middleware
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -40,6 +51,7 @@ app.UseRouting();
 //Enabling session
 app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 //Mapping routes

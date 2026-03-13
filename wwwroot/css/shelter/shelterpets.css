@@ -26,3 +26,32 @@
     border: 2px solid #463229;
     border-radius: 20px;
 }
+
+
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    background: #fafafa;
+    transition: 0.3s;
+}
+
+    .upload-area:hover {
+        border-color: var(--teal);
+        background: #f0f7f9;
+    }
+
+.upload-label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+}
+
+    .upload-label i {
+        font-size: 2.5rem;
+        color: var(--teal);
+    }

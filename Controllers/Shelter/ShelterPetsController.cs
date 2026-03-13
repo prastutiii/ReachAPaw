@@ -2,6 +2,7 @@
 using ReachAPaw.Data;
 using ReachAPaw.Models;
 using ReachAPaw.Filters;
+using System.Diagnostics;
 
 namespace ReachAPaw.Controllers
 {
@@ -15,49 +16,94 @@ namespace ReachAPaw.Controllers
             _context = context;
         }
 
-        // GET: Pets/AddPets
+        // GET: AddPets
         public IActionResult AddPets()
         {
             return View();
         }
 
-        // POST: Pets/AddPets
+        // POST: AddPets
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddPets(PetModel pet, IFormFile pet_file)
-        {
-            // Set shelter_id from logged-in user (example)
-            pet.shelter_id = 1;
 
-            // Handle uploaded file
+        [HttpPost]
+        public IActionResult AddPets(
+        string pet_name,
+        string species,
+        string gender,
+        string age,
+        string location,
+        string description,
+        string ideal_home,
+        string health_status,
+        string is_vaccinated,
+        string is_neutered,
+        string is_microchipped,
+        string status,
+        string fee,
+        IFormFile pet_file)
+        {
+            // Save uploaded pet image
+            string fileName = null;
             if (pet_file != null && pet_file.Length > 0)
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/pets");
-                Directory.CreateDirectory(uploadsFolder); // create folder if it doesn't exist
+                string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/pets");
+                Debug.WriteLine("Uploads folder: " + uploads);
+                Directory.CreateDirectory(uploads);
 
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(pet_file.FileName);
-                string filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var fs = new FileStream(filePath, FileMode.Create))
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(pet_file.FileName);
+                using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                 {
-                    pet_file.CopyTo(fs);
+                    pet_file.CopyTo(stream);
                 }
 
-                // Save relative URL to DB
-                pet.image_url = "/images/pets" + fileName;
+                try
+                {
+                    using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                    {
+                        pet_file.CopyTo(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception while saving file: " + ex.Message);
+                }
+
+                fileName = "/images/pets/" + fileName;
+
             }
 
-            if (ModelState.IsValid)
+            // Map form data to PetModel
+            var pet = new PetModel
             {
-                _context.Pets.Add(pet);
-                _context.SaveChanges();
-                return RedirectToAction("ShelterPets");
-            }
+                pet_name = pet_name,
+                species = species,
+                gender = gender,
+                age = age,
+                location = location,
+                description = description,
+                ideal_home = ideal_home,
+                health_status = health_status,
+                is_vaccinated = Convert.ToBoolean(is_vaccinated),
+                is_neutered = Convert.ToBoolean(is_neutered),
+                is_microchipped = Convert.ToBoolean(is_microchipped),
+                fee = fee,
+                status = status,
+                image_url = fileName,
+                shelter_id = 1
+            };
 
-            return View(pet);
+            // Save to database
+            _context.Pets.Add(pet);
+            _context.SaveChanges();
+
+
+            // Redirect to pet list or home
+            return RedirectToAction("ShelterPets", "ShelterPets");
+
+            
         }
 
-        // GET: Pets/ShelterPets
+        // GET: ShelterPets
         public IActionResult ShelterPets()
         {
             var pets = _context.Pets.ToList();

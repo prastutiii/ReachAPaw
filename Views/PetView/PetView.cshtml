@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="badge-row">
-                    <span class="mini-badge">@Model.age Months</span>
+                    <span class="mini-badge">@Model.age</span>
                     <span class="mini-badge">Dog</span>
                     <span class="mini-badge">@Model.gender</span>
                     <span class="mini-badge">@Model.location</span>
@@ -103,9 +103,12 @@
 
                 <div class="stat-group shelter">
                     <strong>Shelter Info</strong>
-                    <p><strong>P's Animal Shelter</strong></p>
-                    <p>Kathmandu, Nepal</p>
-                    <p>+977 9841000000</p>
+                    @if (Model.Shelters != null)
+                    {
+                        <p><strong>@Model.Shelters.shelter_name</strong></p>
+                        <p>@Model.Shelters.address</p>
+                        <p>@Model.Shelters.phone</p>
+                    }
                 </div>
 
                 <a asp-controller="AdoptionApplication" asp-action="Application1" asp-route-petId="@Model.pet_id">
