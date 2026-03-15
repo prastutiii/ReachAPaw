@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReachAPaw.Data;
-using ReachAPaw.Models;
 using ReachAPaw.Filters;
+using ReachAPaw.Models;
 using System.Diagnostics;
 
 namespace ReachAPaw.Controllers
@@ -16,14 +17,24 @@ namespace ReachAPaw.Controllers
             _context = context;
         }
 
-        // GET: AddPets
+        public IActionResult ShelterPets()
+        {
+            var shelterId = HttpContext.Session.GetInt32("shelter_id");
+
+            if (shelterId == null)
+                return RedirectToAction("Login", "Authentication");
+
+            var pets = _context.Pets
+                               .Where(p => p.shelter_id == shelterId)
+                               .ToList();
+
+            return View(pets);
+        }
+
         public IActionResult AddPets()
         {
             return View();
         }
-
-        // POST: AddPets
-        [HttpPost]
 
         [HttpPost]
         public IActionResult AddPets(
@@ -42,7 +53,6 @@ namespace ReachAPaw.Controllers
         string fee,
         IFormFile pet_file)
         {
-            // Save uploaded pet image
             string fileName = null;
             if (pet_file != null && pet_file.Length > 0)
             {
@@ -51,10 +61,6 @@ namespace ReachAPaw.Controllers
                 Directory.CreateDirectory(uploads);
 
                 fileName = Guid.NewGuid().ToString() + Path.GetExtension(pet_file.FileName);
-                using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                {
-                    pet_file.CopyTo(stream);
-                }
 
                 try
                 {
@@ -69,10 +75,13 @@ namespace ReachAPaw.Controllers
                 }
 
                 fileName = "/images/pets/" + fileName;
-
             }
 
-            // Map form data to PetModel
+            var shelterId = HttpContext.Session.GetInt32("shelter_id");
+
+            if (shelterId == null)
+                return RedirectToAction("Login", "Authentication");
+
             var pet = new PetModel
             {
                 pet_name = pet_name,
@@ -89,25 +98,25 @@ namespace ReachAPaw.Controllers
                 fee = fee,
                 status = status,
                 image_url = fileName,
-                shelter_id = 1
+                shelter_id = shelterId.Value
             };
 
-            // Save to database
             _context.Pets.Add(pet);
             _context.SaveChanges();
 
-
-            // Redirect to pet list or home
             return RedirectToAction("ShelterPets", "ShelterPets");
-
-            
         }
 
-        // GET: ShelterPets
-        public IActionResult ShelterPets()
+        public IActionResult ViewPets(int id)
         {
-            var pets = _context.Pets.ToList();
-            return View(pets);
+            var pet = _context.Pets
+                      .Include(p => p.Shelters)
+                      .FirstOrDefault(p => p.pet_id == id);
+
+            if (pet == null)
+                return NotFound();
+
+            return View(pet);
         }
     }
 }

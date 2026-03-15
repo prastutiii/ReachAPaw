@@ -7,99 +7,194 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="~/css/shelter/shelterpets.css" />
 
-<h2>Add New Pet</h2>
-
-<form asp-controller="ShelterPets" asp-action="AddPets" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-
-    <div class="form-group">
-        <label>Pet Name:</label>
-        <input name="pet_name" class="form-control" required />
+<div class="form-page">
+    <div class="form-header">
+        <h2>Add New Pet</h2>
+        <p>Fill in the details below to list a pet for adoption.</p>
     </div>
 
-    <div class="form-group">
-        <label>Species</label>
-            <label><input type="radio" name="species" value="Dog" required> Dog</label>
-            <label><input type="radio" name="species" value="Cat"> Cat</label>
-            <label><input type="radio" name="species" value="Cattle"> Cattle</label>
-            <label><input type="radio" name="species" value="Other"> Other</label>
-    </div>
+    <div class="form-card">
+        <form asp-controller="ShelterPets" asp-action="AddPets" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        <label>Gender</label>
-        <label><input type="radio" name="gender" value="Male" required> Male</label>
-        <label><input type="radio" name="gender" value="Female"> Female</label>
-    </div>
+            <div class="section-title">Basic Info</div>
 
-    <div class="form-group">
-        <label>Age: </label>
-        <input name="age" class="form-control" required />
-    </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label class="field-label">Pet Name</label>
+                    <input name="pet_name" class="form-control" placeholder="e.g. Max" required />
+                </div>
+                <div class="form-group">
+                    <label class="field-label">Age</label>
+                    <input name="age" class="form-control" placeholder="e.g. 6 months" required />
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>Location: </label>
-        <input name="location" class="form-control" />
-    </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label class="field-label">Species</label>
+                    <div class="radio-group">
+                        <div class="radio-pill">
+                            <input type="radio" name="species" id="dog" value="Dog" required>
+                            <label for="dog">Dog</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="species" id="cat" value="Cat">
+                            <label for="cat">Cat</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="species" id="cattle" value="Cattle">
+                            <label for="cattle">Cattle</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="species" id="other" value="Other">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="field-label">Gender</label>
+                    <div class="radio-group">
+                        <div class="radio-pill">
+                            <input type="radio" name="gender" id="male" value="Male" required>
+                            <label for="male">Male</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="gender" id="female" value="Female">
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>Description:</label>
-        <textarea name="description" class="form-control" required></textarea>
-    </div>
+            <div class="form-group">
+                <label class="field-label">Location</label>
+                <input name="location" class="form-control" placeholder="e.g. Kathmandu" />
+            </div>
 
-    <div class="form-group">
-        <label>Ideal Home: </label>
-        <textarea name="ideal_home" class="form-control" required></textarea>
-    </div>
+            <div class="section-title">About</div>
 
-    <div class="form-group">
-        <label>Health Status: </label>
-        <label><input type="radio" name="health_status" value="Excellent" required> Excellent</label>
-        <label><input type="radio" name="health_status" value="Good" required> Good</label>
-        <label><input type="radio" name="health_status" value="Average" required> Average</label>
-        <label><input type="radio" name="health_status" value="Bad" required> Bad</label>
-    </div>
+            <div class="form-group">
+                <label class="field-label">Description</label>
+                <textarea name="description" class="form-control" placeholder="Tell us about this pet..." required></textarea>
+            </div>
 
-    <div class="form-group">
-        <label>Vaccinated:</label>
-        <label><input type="radio" name="is_vaccinated" value="True" required> Yes</label>
-        <label><input type="radio" name="is_vaccinated" value="False" required> No</label>
-    </div>
+            <div class="form-group">
+                <label class="field-label">Ideal Home</label>
+                <textarea name="ideal_home" class="form-control" placeholder="What kind of home suits this pet?" required></textarea>
+            </div>
 
-    <div class="form-group">
-        <label>Neutered:</label>
-        <label><input type="radio" name="is_neutered" value="True" required> Yes</label>
-        <label><input type="radio" name="is_neutered" value="False" required> No</label>
-    </div>
+            <div class="section-title">Health & Status</div>
 
-    <div class="form-group">
-        <label>Microchipped:</label>
-        <label><input type="radio" name="is_microchipped" value="True" required> Yes</label>
-        <label><input type="radio" name="is_microchipped" value="False" required> No</label>
-    </div>
+            <div class="form-group">
+                <label class="field-label">Health Status</label>
+                <div class="radio-group">
+                    <div class="radio-pill">
+                        <input type="radio" name="health_status" id="excellent" value="Excellent" required>
+                        <label for="excellent">Excellent</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="health_status" id="good" value="Good">
+                        <label for="good">Good</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="health_status" id="average" value="Average">
+                        <label for="average">Average</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="health_status" id="bad" value="Bad">
+                        <label for="bad">Bad</label>
+                    </div>
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>Status: </label>
-        <label><input type="radio" name="status" value="Available" required> Available</label>
-        <label><input type="radio" name="status" value="Pending" required> Pending</label>
-        <label><input type="radio" name="status" value="Adopted" required> Adopted</label>
-        <label><input type="radio" name="status" value="Unvailable" required> Unvailable</label>
-    </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label class="field-label">Vaccinated</label>
+                    <div class="radio-group">
+                        <div class="radio-pill">
+                            <input type="radio" name="is_vaccinated" id="vacc_yes" value="True" required>
+                            <label for="vacc_yes">Yes</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="is_vaccinated" id="vacc_no" value="False">
+                            <label for="vacc_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="field-label">Neutered</label>
+                    <div class="radio-group">
+                        <div class="radio-pill">
+                            <input type="radio" name="is_neutered" id="neut_yes" value="True" required>
+                            <label for="neut_yes">Yes</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="is_neutered" id="neut_no" value="False">
+                            <label for="neut_no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>Fee: </label>
-        <input name="fee" class="form-control" required />
-    </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label class="field-label">Microchipped</label>
+                    <div class="radio-group">
+                        <div class="radio-pill">
+                            <input type="radio" name="is_microchipped" id="chip_yes" value="True" required>
+                            <label for="chip_yes">Yes</label>
+                        </div>
+                        <div class="radio-pill">
+                            <input type="radio" name="is_microchipped" id="chip_no" value="False">
+                            <label for="chip_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="field-label">Adoption Fee (Rs.)</label>
+                    <input name="fee" class="form-control" placeholder="e.g. 500" required />
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>Pet Image: </label>
-        <div class="upload-area">
-            <input type="file" name="pet_file" id="pet_file" required hidden />
-            <label for="pet_file" class="upload-label">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Click to upload or drag and drop</span>
-            </label>
-        </div>
-    </div>
+            <div class="form-group">
+                <label class="field-label">Status</label>
+                <div class="radio-group">
+                    <div class="radio-pill">
+                        <input type="radio" name="status" id="available" value="Available" required>
+                        <label for="available">Available</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="status" id="pending" value="Pending">
+                        <label for="pending">Pending</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="status" id="adopted" value="Adopted">
+                        <label for="adopted">Adopted</label>
+                    </div>
+                    <div class="radio-pill">
+                        <input type="radio" name="status" id="unavailable" value="Unavailable">
+                        <label for="unavailable">Unavailable</label>
+                    </div>
+                </div>
+            </div>
 
-    <button type="submit" class="btn btn-primary mt-2">Add Pet</button>
-</form>
+            <div class="section-title">Photo</div>
+
+            <div class="form-group">
+                <div class="upload-area" onclick="document.getElementById('pet_file').click()">
+                    <input type="file" name="pet_file" id="pet_file" hidden required
+                           onchange="document.getElementById('file-name').textContent = this.files[0].name" />
+                    <label class="upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload or drag and drop</span>
+                        <span class="upload-hint" id="file-name">PNG, JPG up to 5MB</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Add Pet</button>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+﻿@model IEnumerable<ReachAPaw.Models.AdoptionApplicationModel>
+@{
+    ViewData["Title"] = "ShelterAdoptions";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var all = Model.Count();
+    var pending = Model.Count(a => a.status.ToLower().Trim() == "pending");
+    var approved = Model.Count(a => a.status.ToLower().Trim() == "approved");
+    var rejected = Model.Count(a => a.status.ToLower().Trim() == "rejected");
+    var completed = Model.Count(a => a.status.ToLower().Trim() == "completed");
+    var cancelled = Model.Count(a => a.status.ToLower().Trim() == "cancelled");
+    var adopted = Model.Count(a => a.status.ToLower().Trim() == "adopted");
+
+    var filtered = filter == "all" ? Model : Model.Where(a => a.status.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/shelter/shelterdash.css" />
+<link rel="stylesheet" href="~/css/shelter/shelteradoptions.css" />
+
+<div class="welcome">
+    <h2>Hello, Shelter Admin!</h2>
+    <h6>Here are the adoption requests for our pets.</h6>
+</div>
+
+<div class="adoptions-wrapper">
+    <div class="tabs">
+        <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@all</span></a>
+        <a href="?filter=Pending" class="tab @(filter == "Pending" ? "active" : "")">Pending <span class="count">@pending</span></a>
+        <a href="?filter=Approved" class="tab @(filter == "Approved" ? "active" : "")">Approved <span class="count">@approved</span></a>
+        <a href="?filter=Rejected" class="tab @(filter == "Rejected" ? "active" : "")">Rejected <span class="count">@rejected</span></a>
+        <a href="?filter=Completed" class="tab @(filter == "Completed" ? "active" : "")">Completed <span class="count">@completed</span></a>
+        <a href="?filter=Cancelled" class="tab @(filter == "Cancelled" ? "active" : "")">Cancelled <span class="count">@cancelled</span></a>
+        <a href="?filter=Adopted" class="tab @(filter == "Adopted" ? "active" : "")">Adopted <span class="count">@adopted</span></a>
+    </div>
+
+    <div class="adoptions-container">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var adoption in filtered)
+            {
+                <div class="adoption-card">
+                    <div class="adoption-header">
+                        <div class="pet-info">
+                            <img src="@(string.IsNullOrEmpty(adoption.Pets?.image_url) ? "/images/placeholder.jpg" : adoption.Pets.image_url)"
+                                 alt="@adoption.Pets?.pet_name" class="pet-thumb" />
+                            <div>
+                                <h3>@adoption.Pets?.pet_name</h3>
+                                <p>@adoption.Pets?.species • @adoption.Pets?.age old</p>
+                            </div>
+                        </div>
+                        <span class="status-badge @adoption.status.ToLower()">@adoption.status</span>
+                    </div>
+
+                    <div class="applicant-info">
+                        <div class="info-row">
+                            <span class="info-label">Applicant</span>
+                            <span>@adoption.Users?.username</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Email</span>
+                            <span>@adoption.Users?.email</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Phone</span>
+                            <span>@adoption.Users?.phone</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Address</span>
+                            <span>@adoption.Users?.address</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Applied</span>
+                            <span>@adoption.applied_date.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+
+                    <div class="adoption-actions">
+                        <a asp-controller="ShelterAdoptions" asp-action="ViewAdoptions"
+                           asp-route-id="@adoption.adoption_id"
+                           class="action-btn view">View</a>
+
+                        @if (adoption.status == "Pending")
+                        {
+                            <a asp-controller="ShelterAdoptions" asp-action="ApproveAdoption"
+                               asp-route-id="@adoption.adoption_id"
+                               class="action-btn approve"
+                               onclick="return confirm('Approve this application?')">Approve</a>
+                            <a asp-controller="ShelterAdoptions" asp-action="RejectAdoption"
+                               asp-route-id="@adoption.adoption_id"
+                               class="action-btn reject"
+                               onclick="return confirm('Reject this application?')">Reject</a>
+                        }
+
+                        <a asp-controller="ShelterAdoptions" asp-action="DeleteAdoption"
+                           asp-route-id="@adoption.adoption_id"
+                           class="action-btn delete"
+                           onclick="return confirm('Delete this application?')">Delete</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-adoptions">
+                <p>No @(filter == "all" ? "" : filter) adoption requests found.</p>
+            </div>
+        }
+    </div>
+</div>

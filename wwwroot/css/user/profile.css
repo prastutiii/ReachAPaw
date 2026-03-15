@@ -18,13 +18,10 @@ body {
 
 /* Card Customization */
 .card {
-    border-radius: 8px;
-    border: 1.5px solid #212529; /* Matches wireframe stroke */
+    background: #fff;
+    border-radius: 14px;
     transition: transform 0.2s ease-in-out;
-}
-
-.shadow-sm {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
 /* Profile Image Placeholder */
@@ -52,41 +49,38 @@ body {
 .btn-outline-dark {
     border-width: 1.5px;
     font-weight: 500;
+    color: var(--cream);
+    border-color: var(--brown);
+    background-color: var(--brown);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-size: 0.85rem;
 }
 
     .btn-outline-dark:hover {
-        background-color: #212529;
-        color: #fff;
+        border-width: 1.5px;
+        border-color: var(--brown);
+        color: var(--brown);
+        background: transparent;
     }
 
-/* Footer CTA Section */
-.cta-section {
-    background-color: #4a819b !important; /* Muted teal/blue from wireframe */
-    color: #ffffff;
-    padding: 60px 20px;
-    border-top: 2px solid #365f72;
+.btn-outline-cancel {
+    border-width: 1.5px;
+    font-weight: 500;
+    color: darkred;
+    border-color: darkred;
+    background: transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
 }
 
-    .cta-section h2 {
-        font-size: 2.2rem;
-        letter-spacing: 1px;
-        margin-bottom: 15px;
+    .btn-outline-cancel:hover {
+        border-width: 1.5px;
+        border-color: var(--brown);
+        color: var(--brown);
+        background: transparent;
     }
-
-    .cta-section .btn-light {
-        background-color: #ffffff;
-        color: #4a819b;
-        border: 1px solid #212529;
-        font-weight: 600;
-        padding: 12px 30px;
-    }
-
-        .cta-section .btn-light:hover {
-            background-color: #e9ecef;
-        }
 
 /* Navigation & Links */
 .see-all-link {

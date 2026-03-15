@@ -1,10 +1,11 @@
-﻿@model ReachAPaw.Models.PetModel
-@{
-    ViewData["Title"] = "PetView";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    ViewData["Title"] = "ShelterPets";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/user/petview.css" />
+<link rel="stylesheet" href="~/css/shelter/shelterdash.css" />
+<link rel="stylesheet" href="~/css/shelter/shelterpets.css" />
+
 
 <main class="page-wrapper">
     <div class="content-container">
@@ -42,16 +43,6 @@
                     <h3>About @Model.pet_name</h3>
                     <p>@Model.description</p>
                 </div>
-
-                <div class="steps-card">
-                    <h3>Adoption Steps</h3>
-                    <ul class="steps-list">
-                        <li><span class="check-box"></span> Submit Application</li>
-                        <li><span class="check-box"></span> Await Approval</li>
-                        <li><span class="check-box"></span> Confirm Adoption</li>
-                        <li><span class="check-box"></span> Welcome Home</li>
-                    </ul>
-                </div>
             </div>
 
             <div class="info-sidebar">
@@ -65,7 +56,7 @@
                             <span class="value">
                                 @(Model.is_vaccinated
                                                                 ? "Yes"
-                                        : "No")
+                                                                : "No")
                             </span>
                         </li>
 
@@ -74,7 +65,7 @@
                             <span class="value">
                                 @(Model.is_neutered
                                                                 ? "Yes" 
-                                        : "No")
+                                                                                : "No")
                             </span>
                         </li>
 
@@ -83,7 +74,7 @@
                             <span class="value">
                                 @(Model.is_microchipped
                                                                 ? "Yes" 
-                                        : "No")
+                                                                                : "No")
                             </span>
                         </li>
 
@@ -111,10 +102,6 @@
                     }
                 </div>
 
-                <a asp-controller="AdoptionApplication" asp-action="Application1" asp-route-petId="@Model.pet_id" class="btn-adopt">
-                    Adopt @Model.pet_name
-                </a>
-                <p class="social-proof">Over 500 families found their perfect pet through us!</p>
             </div>
         </div>
     </div>

@@ -1,0 +1,92 @@
+﻿@model ReachAPaw.Models.AdoptionApplicationModel
+@{
+    ViewData["Title"] = "View Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/myadoptions.css" />
+
+<div class="page-wrapper">
+    <a asp-action="MyAdoptions" class="back-link">Back to My Adoptions</a>
+
+    <div class="view-header">
+        <div class="pet-info">
+            <img src="@(string.IsNullOrEmpty(Model.Pets?.image_url) ? "/images/placeholder.jpg" : Model.Pets.image_url)"
+                 alt="@Model.Pets?.pet_name" class="pet-thumb" />
+            <div>
+                <h2>@Model.Pets?.pet_name</h2>
+                <p>@Model.Pets?.species • @Model.Pets?.gender • @Model.Pets?.age old</p>
+            </div>
+        </div>
+        <span class="status-badge @Model.status.ToLower().Trim()">@Model.status</span>
+    </div>
+
+    <div class="view-grid">
+
+        <div class="info-card">
+            <h4>Applicant Info</h4>
+            <div class="info-row"><span class="info-label">Username</span><span>@Model.Users?.username</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span>@Model.Users?.email</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span>@Model.Users?.phone</span></div>
+            <div class="info-row"><span class="info-label">Address</span><span>@Model.Users?.address</span></div>
+        </div>
+
+        <div class="info-card">
+            <h4>Application Details</h4>
+            <div class="info-row"><span class="info-label">Full Name</span><span>@Model.ApplicationDetails?.full_name</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span>@Model.ApplicationDetails?.email</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span>@Model.ApplicationDetails?.phone</span></div>
+            <div class="info-row"><span class="info-label">City</span><span>@Model.ApplicationDetails?.city</span></div>
+            <div class="info-row"><span class="info-label">Address</span><span>@Model.ApplicationDetails?.address</span></div>
+            <div class="info-row"><span class="info-label">Applied</span><span>@Model.applied_date.ToString("MMM dd, yyyy")</span></div>
+        </div>
+
+        <div class="info-card">
+            <h4>Living Situation</h4>
+            <div class="info-row"><span class="info-label">Home Type</span><span>@Model.ApplicationDetails?.home_type</span></div>
+            <div class="info-row"><span class="info-label">Ownership</span><span>@Model.ApplicationDetails?.own_or_rent</span></div>
+            <div class="info-row"><span class="info-label">Has Yard</span><span>@(Model.ApplicationDetails?.has_yard == true ? "Yes" : "No")</span></div>
+            <div class="info-row"><span class="info-label">Has Children</span><span>@(Model.ApplicationDetails?.has_children == true ? "Yes" : "No")</span></div>
+            <div class="info-row"><span class="info-label">Other Pets</span><span>@(Model.ApplicationDetails?.other_pets == true ? "Yes" : "No")</span></div>
+        </div>
+
+        <div class="info-card">
+            <h4>About the Applicant</h4>
+            <div class="info-block">
+                <span class="info-label">Pet Experience</span>
+                <p>@Model.ApplicationDetails?.pet_experience</p>
+            </div>
+            <div class="info-block">
+                <span class="info-label">Reason to Adopt</span>
+                <p>@Model.ApplicationDetails?.reason</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ApplicationDetails?.valid_document))
+        {
+            <div class="info-card">
+                <h4>ID Document</h4>
+                <img src="/images/documents/@Model.ApplicationDetails.valid_document"
+                     alt="ID Document" class="document-img" />
+            </div>
+        }
+
+    </div>
+    @if (Model.status.ToLower().Trim() == "approved")
+    {
+        <div class="action-bar">
+            <a asp-controller="Payment" asp-action="CompleteAdoption"
+               asp-route-id="@Model.adoption_id"
+               class="action-btn approve">Complete Adoption</a>
+        </div>
+    }
+
+    @if (Model.status.ToLower().Trim() == "adopted")
+    {
+        <div class="action-bar">
+            <a asp-controller="Payment" asp-action="Certificate"
+               asp-route-id="@Model.adoption_id"
+               class="action-btn approve">Adoption Certificate</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,176 @@
+﻿@model ReachAPaw.Models.AdoptionApplicationModel
+@{
+    ViewData["Title"] = "Complete Adoption";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var fee = double.TryParse(Model.Pets?.fee, out var f) ? f : 0;
+    var vaccination = 250;
+    var delivery = 100;
+    var total = fee + vaccination + delivery;
+}
+
+<link rel="stylesheet" href="~/css/user/payment.css" />
+
+<div class="payment-page">
+    <a asp-controller="UserAdoptions" asp-action="MyAdoptions" class="back-link">Back</a>
+
+    <h2>Complete your Adoption</h2>
+    <p class="subtitle">You're one step away from bringing your new friend home.</p>
+
+    <div class="pet-banner">
+        <span>@Model.Pets?.pet_name is waiting for you</span>
+    </div>
+
+    <div class="payment-layout">
+
+        <div class="payment-left">
+            <form asp-controller="CompleteAdoption" asp-action="Payment" asp-route-id="@Model.adoption_id" method="post" id="payment-form">
+
+                <div class="form-card">
+                    <h4>Choose your payment method</h4>
+                    <label class="method-option">
+                        <input type="radio" name="method" value="Credit/Debit Card" checked id="card" />
+                        <span>Credit/Debit Card</span>
+                    </label>
+                    <label class="method-option">
+                        <input type="radio" name="method" value="Cash on Delivery" id="cod" />
+                        <span>Cash on Delivery</span>
+                    </label>
+                </div>
+
+                <div class="form-card" id="card-details">
+                    <h4>Card Details</h4>
+                    <div class="form-group">
+                        <label>Card Number: *</label>
+                        <input type="text" name="card_number" id="card_number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" />
+                        <span class="field-error" id="err-card_number"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Name on Card: *</label>
+                        <input type="text" name="card_name" id="card_name" class="form-control" placeholder="John Doe" />
+                        <span class="field-error" id="err-card_name"></span>
+                    </div>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label>Expiry Date: *</label>
+                            <input type="text" name="expiry" id="expiry" class="form-control" placeholder="MM/YY" maxlength="5" />
+                            <span class="field-error" id="err-expiry"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV: *</label>
+                            <input type="text" name="cvv" id="cvv" class="form-control" placeholder="123" maxlength="3" />
+                            <span class="field-error" id="err-cvv"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secure-note">
+                    <strong>Secure Payment</strong>
+                    <p>Your payment info is encrypted and secure.</p>
+                </div>
+
+                <button type="submit" class="btn-pay">Complete Adoption</button>
+                <p class="terms-note">By completing this payment, you agree to our Terms of Service and Adoption Policy.</p>
+
+            </form>
+        </div>
+
+        <div class="payment-right">
+            <div class="summary-card">
+                <h4>Adoption Summary</h4>
+
+                <div class="summary-pet">
+                    <img src="@(string.IsNullOrEmpty(Model.Pets?.image_url) ? "/images/placeholder.jpg" : Model.Pets.image_url)"
+                         alt="@Model.Pets?.pet_name" class="summary-thumb" />
+                    <div>
+                        <strong>@Model.Pets?.pet_name</strong>
+                        <p>@Model.Pets?.Shelters?.shelter_name</p>
+                        <p>@Model.Pets?.age old</p>
+                    </div>
+                </div>
+
+                <div class="summary-rows">
+                    <div class="summary-row">
+                        <span>Adoption Fee</span>
+                        <span>Rs. @fee</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Vaccination Package</span>
+                        <span>Rs. @vaccination</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Charges</span>
+                        <span>Rs. @delivery</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>Rs. @total</span>
+                    </div>
+                </div>
+
+                <div class="included-box">
+                    <strong>What's Included?</strong>
+                    <ul>
+                        <li>Complete vaccination records</li>
+                        <li>Microchip registration</li>
+                        <li>First vet visit voucher</li>
+                        <li>Starter pet supplies kit</li>
+                        <li>30 day health guarantee</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const cardRadio   = document.getElementById('card');
+    const codRadio    = document.getElementById('cod');
+    const cardDetails = document.getElementById('card-details');
+    const form        = document.getElementById('payment-form');
+
+    function toggleCardDetails() {
+        cardDetails.style.display = cardRadio.checked ? 'block' : 'none';
+        clearErrors();
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.field-error').forEach(e => e.textContent = '');
+        document.querySelectorAll('.form-control').forEach(e => e.classList.remove('input-error'));
+    }
+
+    function showError(fieldId, message) {
+        document.getElementById('err-' + fieldId).textContent = message;
+        document.getElementById(fieldId).classList.add('input-error');
+    }
+
+    form.addEventListener('submit', function (e) {
+        clearErrors();
+        let valid = true;
+
+        if (cardRadio.checked) {
+            const cardNumber = document.getElementById('card_number').value.trim();
+            const cardName   = document.getElementById('card_name').value.trim();
+            const expiry     = document.getElementById('expiry').value.trim();
+            const cvv        = document.getElementById('cvv').value.trim();
+
+            if (!cardNumber) { showError('card_number', 'Card number is required.'); valid = false; }
+            else if (cardNumber.replace(/\s/g, '').length < 16) { showError('card_number', 'Enter a valid 16-digit card number.'); valid = false; }
+
+            if (!cardName) { showError('card_name', 'Name on card is required.'); valid = false; }
+
+            if (!expiry) { showError('expiry', 'Expiry date is required.'); valid = false; }
+            else if (!/^\d{2}\/\d{2}$/.test(expiry)) { showError('expiry', 'Use MM/YY format.'); valid = false; }
+
+            if (!cvv) { showError('cvv', 'CVV is required.'); valid = false; }
+            else if (cvv.length < 3) { showError('cvv', 'Enter a valid 3-digit CVV.'); valid = false; }
+        }
+
+        if (!valid) e.preventDefault();
+    });
+
+    cardRadio.addEventListener('change', toggleCardDetails);
+    codRadio.addEventListener('change', toggleCardDetails);
+    toggleCardDetails();
+</script>

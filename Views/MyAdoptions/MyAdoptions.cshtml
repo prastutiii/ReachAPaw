@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ReachAPaw.Models.AdoptionApplicationModel>
+@{
+    ViewData["Title"] = "MyAdoptions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var filtered = filter == "all" ? Model : Model.Where(a => a.status.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/user/myadoptions.css" />
+
+<div class="adoptions-page">
+
+    <div class="page-header">
+        <h2>My Adoptions</h2>
+        <p>Track and manage all your adoption applications.</p>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <span class="stat-number">@ViewBag.Total</span>
+            <span class="stat-label">Total Applications</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">@ViewBag.Pending</span>
+            <span class="stat-label">Pending Review</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">@ViewBag.Approved</span>
+            <span class="stat-label">Approved</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">@ViewBag.Adopted</span>
+            <span class="stat-label">Adopted</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@Model.Count()</span></a>
+        <a href="?filter=pending" class="tab @(filter == "pending" ? "active" : "")">Pending <span class="count">@ViewBag.Pending</span></a>
+        <a href="?filter=approved" class="tab @(filter == "approved" ? "active" : "")">Approved <span class="count">@ViewBag.Approved</span></a>
+        <a href="?filter=rejected" class="tab @(filter == "rejected" ? "active" : "")">Rejected <span class="count">@ViewBag.Rejected</span></a>
+        <a href="?filter=completed" class="tab @(filter == "completed" ? "active" : "")">Completed <span class="count">@ViewBag.Completed</span></a>
+        <a href="?filter=cancelled" class="tab @(filter == "cancelled" ? "active" : "")">Cancelled <span class="count">@ViewBag.Cancelled</span></a>
+        <a href="?filter=adopted" class="tab @(filter == "adopted" ? "active" : "")">Adopted <span class="count">@ViewBag.Adopted</span></a>
+    </div>
+
+    <div class="adoptions-list">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var adoption in filtered)
+            {
+                <div class="adoption-card">
+                    <div class="card-left">
+                        <img src="@(string.IsNullOrEmpty(adoption.Pets?.image_url) ? "/images/placeholder.jpg" : adoption.Pets.image_url)"
+                             alt="@adoption.Pets?.pet_name" class="pet-thumb" />
+                        <span class="status-badge @adoption.status.ToLower().Trim()">@adoption.status</span>
+                    </div>
+
+                    <div class="card-middle">
+                        <h3>@adoption.Pets?.pet_name</h3>
+                        <p>@adoption.Pets?.Shelters?.shelter_name • @adoption.Pets?.age old</p>
+                        <p class="applied-date">Applied: @adoption.applied_date.ToString("MMM d, yyyy")</p>
+                    </div>
+
+                    <div class="card-right">
+                        <div class="fee-info">
+                            <span class="fee-label">Adoption Fee</span>
+                            <span class="fee-amount">Rs. @adoption.Pets?.fee</span>
+                        </div>
+
+                        @if (adoption.status.ToLower().Trim() == "approved")
+                        {
+                            <a asp-controller="CompleteAdoption" asp-action="Payment"
+                               asp-route-id="@adoption.adoption_id"
+                               class="btn-complete">Complete Adoption</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="MyAdoptions" asp-action="ViewMyAdoptions"
+                               asp-route-id="@adoption.adoption_id"
+                               class="view-link">View Details &raquo;</a>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-adoptions">
+                <p>No @(filter == "all" ? "" : filter) applications found.</p>
+            </div>
+        }
+    </div>
+</div>

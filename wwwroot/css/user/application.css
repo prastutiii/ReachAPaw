@@ -6,6 +6,35 @@
     --accent: #fbc02d;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background-position: top center;
+    background-repeat: repeat-y;
+    background-size: auto;
+    background-color: #f9f4e8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.back-link {
+    color: #5d4037;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease, gap 0.2s ease;
+    margin-left: -190px;
+    margin-top: 8px;
+}
+
+    .back-link:hover {
+        color: #3e2723;
+        gap: 10px;
+    }
+
 .form-body {
     background-color: var(--cream);
 }

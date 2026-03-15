@@ -104,6 +104,17 @@ input {
     margin-top: 20px;
 }
 
+.btn-submit:hover {
+    background-color: #c2714e;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-submit:active {
+    background-color: #c2714e;
+    transform: scale(0.99);
+}
+
 .footer-text {
     margin-top: 20px;
     font-size: 0.9rem;

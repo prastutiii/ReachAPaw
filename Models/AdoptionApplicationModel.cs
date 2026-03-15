@@ -33,6 +33,13 @@ namespace ReachAPaw.Models
         public int application_id { get; set; }
 
         // Navigation property to details
+        [ForeignKey("pet_id")]
+        public virtual PetModel Pets { get; set; }
+        [ForeignKey("application_id")]
         public virtual ApplicationDetailsModel ApplicationDetails { get; set; }
+        [ForeignKey("user_id")]
+        public virtual UserModel Users { get; set; }
+        [ForeignKey("shelter_id")]
+        public virtual ShelterModel Shelters { get; set; }
     }
 }

@@ -110,7 +110,7 @@ namespace ReachAPaw.Controllers.User
                 application_id = newApplicationId,  // FK to details
                 status = "Pending",
                 applied_date = DateTime.Now,
-                user_id = 1,  
+                user_id = HttpContext.Session.GetInt32("user_id").Value,  
                 shelter_id = pet.shelter_id,
                 pet_id = petId
             };

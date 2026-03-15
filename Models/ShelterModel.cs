@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReachAPaw.Models
 {
@@ -26,7 +27,10 @@ namespace ReachAPaw.Models
         public string hours { get; set; }
 
         public string status { get; set; }
+        public int user_id { get; set; }
 
+        [ForeignKey("user_id")]
+        public UserModel? Users { get; set; }
         public ICollection<PetModel> Pets { get; set; }
     }
 }

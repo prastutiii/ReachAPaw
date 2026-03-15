@@ -14,6 +14,8 @@ namespace ReachAPaw.Data
         public DbSet<ShelterModel> Shelters { get; set; }
         public DbSet<AdoptionApplicationModel> AdoptionApplications { get; set; }
         public DbSet<ApplicationDetailsModel> ApplicationDetails { get; set; }
+        public DbSet<PaymentModel> Payments { get; set; }
+        public DbSet<AdoptionModel> Adoptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +24,7 @@ namespace ReachAPaw.Data
             modelBuilder.Entity<AdoptionApplicationModel>()
                 .HasOne(a => a.ApplicationDetails)
                 .WithOne(d => d.AdoptionApplications)
-                .HasForeignKey<ApplicationDetailsModel>(d => d.application_id)
+                .HasForeignKey<AdoptionApplicationModel>(a => a.application_id)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

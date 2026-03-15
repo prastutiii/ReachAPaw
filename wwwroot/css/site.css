@@ -86,6 +86,10 @@ body {
             color: #4a7c92; /* Accent Blue */
         }
 
+        .nav-links a.active {
+            color: #4a7c92; /* Accent Blue */
+        }
+
 .nav-icons {
     display: flex;
     gap: 1.2rem;

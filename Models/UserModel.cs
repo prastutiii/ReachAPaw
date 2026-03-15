@@ -16,5 +16,7 @@ namespace ReachAPaw.Models
         public string role { get; set; }
         public string status { get; set; }
         public string? image_url { get; set; }
+
+        public ICollection<ShelterModel> Shelters { get; set; }
     }
 }

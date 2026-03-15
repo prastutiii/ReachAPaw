@@ -21,7 +21,6 @@ namespace ReachAPaw.Models
     public class ApplicationDetailsModel
     {
         [Key]
-        [ForeignKey("AdoptionApplications")]
         public int application_id { get; set; }   // PK + FK to AdoptionApplication
 
         [Required]

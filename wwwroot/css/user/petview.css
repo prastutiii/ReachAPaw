@@ -18,6 +18,22 @@ body {
     background-color: #fdf2e9;
 }
 
+.back-link {
+    color: #5d4037;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease, gap 0.2s ease;
+}
+
+    .back-link:hover {
+        color: #3e2723;
+        gap: 10px;
+    }
+
 .pet-gallery-card {
     background: var(--white);
     border-radius: 20px;
@@ -199,3 +215,32 @@ body {
     color: #666;
     margin-top: 10px;
 }
+
+.btn-adopt {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: #f28d61;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-sizing: border-box;
+}
+
+    .btn-adopt:hover {
+        background-color: #c2714e;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .btn-adopt:active {
+        background-color: #c2714e;
+        transform: scale(0.99);
+    }

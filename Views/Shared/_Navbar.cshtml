@@ -1,17 +1,34 @@
-﻿<nav class="navbar">
+﻿
+<nav class="navbar">
     <img class="logo" src="~/assets/logo2.png" />
 
     <ul class="nav-links">
-        <a href="/Home/Home">Home</a>
-        <a href="/Adopt/Adopt">Adopt</a>
-        <a href="/Authentication/Login">Shelters</a>
-        <a href="/Authentication/Login">Community</a>
-        <a href="/Home/About">About Us</a>
+        <li>
+            <a asp-controller="Home" asp-action="Home"
+               class="@(ViewData["Title"]?.ToString() == "Home" ? "active" : "")">Home</a>
+        </li>
+        <li>
+            <a asp-controller="Adopt" asp-action="Adopt"
+               class="@(ViewData["Title"]?.ToString() == "Adopt" ? "active" : "")">Adopt</a>
+        </li>
+        <li>
+            <a asp-controller="Shelter" asp-action="Index"
+               class="@(ViewData["Title"]?.ToString() == "Shelter" ? "active" : "")">Shelters</a>
+        </li>
+        <li>
+            <a asp-controller="Community" asp-action="Index"
+               class="@(ViewData["Title"]?.ToString() == "Community" ? "active" : "")">Community</a>
+        </li>
+        <li>
+            <a asp-controller="Home" asp-action="About"
+               class="@(ViewData["Title"]?.ToString() == "About" ? "active" : "")">About Us</a>
+        </li>
     </ul>
 
     <div class="nav-icons">
-        <button class="icon-btn" aria-label="Search"><i class="bi bi-search"></i></button>
-        <button class="icon-btn" aria-label="Favorites"><i class="bi bi-heart"></i></button>
+        <a href="/Profile/Profile" class="icon-btn" aria-label="Notifications"><i class="bi bi-bell-fill"></i></a>
+        <a href="/MyAdoptions/MyAdoptions" class="icon-btn" aria-label="Adoptions"><i class="bi bi-house"></i></a>
+        <a href="/Profile/Profile" class="icon-btn" aria-label="Favorites"><i class="bi bi-heart"></i></a>
         <a href="/Profile/Profile" class="icon-btn" aria-label="Profile"><i class="bi bi-person-circle"></i></a>
     </div>
 </nav>

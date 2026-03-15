@@ -45,15 +45,15 @@
 
 .pet-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
 }
 
 .pet-card {
     background: #ffffff;
     border-radius: 12px;
-    width: 300px;
-    height: 400px;
+    width: 100%;
+    height: auto;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     pointer-events: auto;

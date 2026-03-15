@@ -1,0 +1,49 @@
+﻿@model ReachAPaw.Models.AdoptionApplicationModel
+@{
+    ViewData["Title"] = "Adoption Certificate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/certificate.css" />
+
+<div class="cert-page">
+
+    <div class="congrats-header">
+        <div class="heart-icon">♥</div>
+        <h2>Congratulations!</h2>
+        <p>You've officially adopted @Model.Pets?.pet_name!</p>
+        <p class="sub">Your new family member is on their way to a forever home.</p>
+    </div>
+
+    <div class="certificate-wrapper">
+        <div class="certificate">
+            <h3>Adoption Certificate</h3>
+            <p class="cert-org">Reach.A.Paw</p>
+
+            <div class="cert-pet-img">
+                <img src="@(string.IsNullOrEmpty(Model.Pets?.image_url) ? "/images/placeholder.jpg" : Model.Pets.image_url)"
+                     alt="@Model.Pets?.pet_name" />
+            </div>
+
+            <h4 class="pet-name">@Model.Pets?.pet_name</h4>
+            <span class="adoption-id">Certificate ID: @ViewBag.CertificateNumber</span>
+
+            <p class="cert-text">Has been officially adopted on</p>
+            <p class="cert-date">@(((DateTime)ViewBag.AdoptionDate).ToString("MMMM dd, yyyy"))</p>
+        </div>
+    </div>
+
+    <div class="next-steps-card">
+        <h4>Next Steps</h4>
+        <div class="step step-1">Wait for Delivery</div>
+        <div class="step step-2">Prepare your Home</div>
+        <div class="step step-3">Love</div>
+    </div>
+
+    <a asp-controller="Home" asp-action="Home" class="btn-return">Return Home</a>
+
+    <div class="thank-you-note">
+        <p>Thank you for choosing adoption! You've made a wonderful decision that will change both your life and @Model.Pets?.pet_name's life forever.</p>
+    </div>
+
+</div>

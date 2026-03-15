@@ -44,6 +44,11 @@ namespace ReachAPaw.Controllers
                     }
                     else if (role == "shelter")
                     {
+                        var shelter = _context.Shelters.FirstOrDefault(s => s.user_id == user.user_id);
+                        if (shelter != null)
+                        {
+                            HttpContext.Session.SetInt32("shelter_id", shelter.shelter_id);
+                        }
                         return RedirectToAction("ShelterDash", "Shelter");
                     }
                     else

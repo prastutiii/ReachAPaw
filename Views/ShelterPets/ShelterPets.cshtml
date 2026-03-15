@@ -8,11 +8,34 @@
 
 <div class="welcome">
     <h2>Hello, Shelter Admin!</h2>
-    <h6> Here is the information about our pets.</h6>
+    <h6> Here is the information about your pets.</h6>
 </div>
 
 <a href="/ShelterPets/AddPets" class="add">Add New Pet</a>
 
 <div class="pet-container">
+
+    @foreach (var pet in Model)
+    {
+        <div class="pet-card">
+            <div class="photo-wrap">
+                <img src="@(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)" alt="@pet.pet_name">
+            </div>
+            <div class="pet-details">
+                <div class="name-line">
+                    <h3>@pet.pet_name</h3>
+                    <span class="gender-tag">@pet.gender</span>
+                </div>
+                <p>@pet.species • @pet.age old • @pet.location</p>
+                <div class="admin-actions">
+                    <a asp-controller="ShelterPets" asp-action="ViewPets" asp-route-id="@pet.pet_id" class="action-btn view">View</a>
+                    <a asp-controller="ShelterPets" asp-action="EditPet" asp-route-id="@pet.pet_id" class="action-btn edit">Edit</a>
+                    <a asp-controller="ShelterPets" asp-action="DeletePet" asp-route-id="@pet.pet_id"
+                       class="action-btn delete"
+                       onclick="return confirm('Delete @pet.pet_name?')">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
 
 </div>
