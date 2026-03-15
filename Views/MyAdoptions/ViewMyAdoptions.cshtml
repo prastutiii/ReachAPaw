@@ -11,10 +11,14 @@
 
     <div class="view-header">
         <div class="pet-info">
-            <img src="@(string.IsNullOrEmpty(Model.Pets?.image_url) ? "/images/placeholder.jpg" : Model.Pets.image_url)"
-                 alt="@Model.Pets?.pet_name" class="pet-thumb" />
+            <a asp-controller="PetView" asp-action="PetView" asp-route-id="@Model.Pets?.pet_id">
+                <img src="@(string.IsNullOrEmpty(Model.Pets?.image_url) ? "/images/placeholder.jpg" : Model.Pets.image_url)"
+                     alt="@Model.Pets?.pet_name" class="pet-thumb" />
+            </a>
             <div>
-                <h2>@Model.Pets?.pet_name</h2>
+                <a asp-controller="PetView" asp-action="PetView" asp-route-id="@Model.Pets?.pet_id" class="pet-name-link">
+                    <h2>@Model.Pets?.pet_name</h2>
+                </a>
                 <p>@Model.Pets?.species • @Model.Pets?.gender • @Model.Pets?.age old</p>
             </div>
         </div>
@@ -74,11 +78,18 @@
     </div>
     @if (Model.status.ToLower().Trim() == "approved")
     {
-        <div class="action-bar">
-            <a asp-controller="Payment" asp-action="CompleteAdoption"
-               asp-route-id="@Model.adoption_id"
-               class="action-btn approve">Complete Adoption</a>
-        </div>
+        @if (Model.status.ToLower().Trim() == "approved")
+        {
+            <div class="action-bar">
+                <a asp-controller="Payment" asp-action="CompleteAdoption"
+                   asp-route-id="@Model.adoption_id"
+                   class="action-btn approve">Complete Adoption</a>
+                <a asp-controller="Payment" asp-action="CancelAdoption"
+                   asp-route-id="@Model.adoption_id"
+                   class="action-btn reject"
+                   onclick="return confirm('Are you sure you want to cancel this adoption?')">Cancel Adoption</a>
+            </div>
+        }
     }
 
     @if (Model.status.ToLower().Trim() == "adopted")

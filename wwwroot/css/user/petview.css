@@ -56,6 +56,40 @@ body {
         object-fit: cover;
     }
 
+.fav-heart {
+    background: white;
+    margin: 10px 10px 10px auto;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .fav-heart i {
+        font-size: 1.1rem;
+        color: #e57373;
+        transition: color 0.2s ease;
+    }
+
+    .fav-heart:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+        .fav-heart:hover i {
+            color: #c62828;
+        }
+
+    .fav-heart.active i {
+        color: #c62828;
+    }
+
 /* Details Layout Grid */
 .details-layout {
     display: flex;
@@ -243,4 +277,31 @@ body {
     .btn-adopt:active {
         background-color: #c2714e;
         transform: scale(0.99);
+    }
+
+.btn-status {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    cursor: not-allowed;
+    box-sizing: border-box;
+}
+
+    .btn-status.adopted {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .btn-status.pending {
+        background: #fff8e1;
+        color: #f9a825;
+    }
+
+    .btn-status.unavailable {
+        background: #fce4ec;
+        color: #c62828;
     }

@@ -34,6 +34,32 @@ namespace ReachAPaw.Controllers
             return View(adoption);
         }
 
+        public IActionResult CancelAdoption(int id)
+        {
+            var userId = HttpContext.Session.GetInt32("user_id");
+
+            if (userId == null)
+                return RedirectToAction("Login", "Authentication");
+
+            var adoption = _context.AdoptionApplications
+                                   .FirstOrDefault(a => a.adoption_id == id && a.user_id == userId);
+
+            if (adoption != null)
+            {
+                adoption.status = "Cancelled";
+
+                var pet = _context.Pets.Find(adoption.pet_id);
+                if (pet != null)
+                {
+                    pet.status = "Available";
+                }
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("MyAdoptions");
+        }
+
         [HttpPost]
         public IActionResult Payment(int id, string method, string card_number, string card_name, string expiry, string cvv)
         {
@@ -76,6 +102,13 @@ namespace ReachAPaw.Controllers
 
             // mark application as completed
             adoption.status = "Completed";
+
+            var pet = _context.Pets.Find(adoption.pet_id);
+            if (pet != null)
+            {
+                pet.status = "Adopted";
+            }
+
             _context.SaveChanges();
 
             return RedirectToAction("Certificate", new { id });

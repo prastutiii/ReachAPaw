@@ -5,6 +5,7 @@
 }
 
 <link rel="stylesheet" href="~/css/user/petview.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <main class="page-wrapper">
     <div class="content-container">
@@ -17,9 +18,12 @@
         <div class="pet-gallery-card">
             <div class="main-image">
                 <img src="@(string.IsNullOrEmpty(Model.image_url) ? "/assets/placeholder.png" : Model.image_url)" alt="@Model.pet_name">
-                <button class="fav-heart"><i class="far fa-heart"></i></button>
             </div>
         </div>
+
+        <button class="fav-heart" onclick="toggleFav(this, @Model.pet_id)">
+            <i class="bi bi-heart"></i>
+        </button>
 
         <div class="details-layout">
             <div class="info-main">
@@ -110,12 +114,52 @@
                         <p>@Model.Shelters.phone</p>
                     }
                 </div>
-
-                <a asp-controller="AdoptionApplication" asp-action="Application1" asp-route-petId="@Model.pet_id" class="btn-adopt">
-                    Adopt @Model.pet_name
-                </a>
+                @if (Model.status?.ToLower().Trim() == "available")
+                {
+                    <a asp-controller="AdoptionApplication" asp-action="Application1" asp-route-petId="@Model.pet_id" class="btn-adopt">
+                        Adopt @Model.pet_name
+                    </a>
+                }
+                else if (Model.status?.ToLower().Trim() == "adopted")
+                {
+                    <div class="btn-status adopted">Already Adopted</div>
+                }
+                else
+                {
+                    <div class="btn-status unavailable">Currently Unavailable</div>
+                }
                 <p class="social-proof">Over 500 families found their perfect pet through us!</p>
             </div>
         </div>
     </div>
 </main>
+
+@Html.AntiForgeryToken()
+
+<script>
+    function toggleFav(btn, petId) {
+        fetch('/Favorites/ToggleFavorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `petId=${petId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const icon = btn.querySelector('i');
+                if (data.isFavorited) {
+                    icon.classList.remove('bi-heart');
+                    icon.classList.add('bi-heart-fill');
+                    btn.classList.add('active');
+                } else {
+                    icon.classList.remove('bi-heart-fill');
+                    icon.classList.add('bi-heart');
+                    btn.classList.remove('active');
+                }
+            }
+        });
+    }
+</script>

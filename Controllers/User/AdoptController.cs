@@ -19,7 +19,9 @@ namespace ReachAPaw.Controllers
         public async Task<IActionResult> Adopt()
         {
             // Fetch the list of pets from the database
-            var pets = await _context.Pets.ToListAsync();
+            var pets = _context.Pets
+                   .Where(p => p.status.ToLower().Trim() == "available")
+                   .ToList();
 
             // Pass the list (IEnumerable) to the View
             return View(pets);

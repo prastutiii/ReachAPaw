@@ -71,18 +71,11 @@
                             <span class="fee-amount">Rs. @adoption.Pets?.fee</span>
                         </div>
 
-                        @if (adoption.status.ToLower().Trim() == "approved")
-                        {
-                            <a asp-controller="CompleteAdoption" asp-action="Payment"
-                               asp-route-id="@adoption.adoption_id"
-                               class="btn-complete">Complete Adoption</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="MyAdoptions" asp-action="ViewMyAdoptions"
-                               asp-route-id="@adoption.adoption_id"
-                               class="view-link">View Details &raquo;</a>
-                        }
+                        <a asp-controller="MyAdoptions" asp-action="ViewMyAdoptions"
+                           asp-route-id="@adoption.adoption_id"
+                           class="view-link">View Details &raquo;
+                       </a>
+
                     </div>
                 </div>
             }

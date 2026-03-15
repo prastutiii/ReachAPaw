@@ -56,6 +56,13 @@ namespace ReachAPaw.Controllers
             if (adoption != null)
             {
                 adoption.status = "Approved";
+
+                var pet = _context.Pets.Find(adoption.pet_id);
+                if (pet != null)
+                {
+                    pet.status = "Pending";
+                }
+
                 _context.SaveChanges();
             }
             return RedirectToAction("ViewAdoptions", new { id });

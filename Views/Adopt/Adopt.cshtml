@@ -19,16 +19,13 @@
 
 <section class="pet-showcase">
     <div class="pet-grid">
-         @if (Model != null && Model.Any())
+        @if (Model != null && Model.Any())
         {
             @foreach (var pet in Model)
             {
                 <a class="pet-card" asp-controller="PetView" asp-action="PetView" asp-route-id="@pet.pet_id">
                     <div class="photo-wrap">
-                        <img src=" @(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)" alt="@pet.pet_name">
-                        <span class="wishlist-heart">
-                            <i class="bi bi-heart" title="Add to Favorites"></i>
-                        </span>
+                        <img src="@(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)" alt="@pet.pet_name">
                     </div>
                     <div class="pet-details">
                         <div class="name-line">

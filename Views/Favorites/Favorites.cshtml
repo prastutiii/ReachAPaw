@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ReachAPaw.Models.FavoriteModel>
+@{
+    ViewData["Title"] = "My Favorites";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/favorites.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+@Html.AntiForgeryToken()
+
+<div class="favorites-page">
+    <div class="page-header">
+        <h2>My Favorites</h2>
+        <p>Pets you've saved for later.</p>
+    </div>
+
+    <div class="favorites-grid">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var fav in Model)
+            {
+                <div class="pet-card-wrapper">
+                    <a class="pet-card" asp-controller="PetView" asp-action="PetView" asp-route-id="@fav.Pets.pet_id">
+                        <div class="photo-wrap">
+                            <img src="@(string.IsNullOrEmpty(fav.Pets?.image_url) ? "/images/placeholder.jpg" : fav.Pets.image_url)"
+                                 alt="@fav.Pets?.pet_name" />
+                        </div>
+                        <div class="pet-details">
+                            <div class="name-line">
+                                <h3>@fav.Pets?.pet_name</h3>
+                                <span class="gender-tag">@fav.Pets?.gender</span>
+                            </div>
+                            <p>@fav.Pets?.age old</p>
+                        </div>
+                    </a>
+                    <button class="fav-heart active" onclick="removeFav(this, @fav.Pets.pet_id, @fav.favorite_id)">
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-favorites">
+                <p>You haven't saved any pets yet.</p>
+                <a asp-controller="Adopt" asp-action="Adopt" class="browse-link">Browse Pets</a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function removeFav(btn, petId, favId) {
+        fetch('/Favorites/ToggleFavorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `petId=${petId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && !data.isFavorited) {
+                btn.closest('.pet-card-wrapper').remove();
+            }
+        });
+    }
+</script>

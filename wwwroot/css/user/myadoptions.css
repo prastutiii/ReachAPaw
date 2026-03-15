@@ -329,6 +329,7 @@
     color: #5d4037;
     margin: 0 0 4px;
     font-size: 1.2rem;
+    text-decoration: none;
 }
 
 .pet-info p {
@@ -468,6 +469,11 @@
 
     .action-btn.approve {
         background: #5d4037;
+        color: #fff;
+    }
+
+    .action-btn.reject {
+        background: #c62828;
         color: #fff;
     }
 
