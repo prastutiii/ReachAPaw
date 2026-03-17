@@ -1,0 +1,176 @@
+﻿@model IEnumerable<ReachAPaw.Models.ShelterModel>
+@{
+    ViewData["Title"] = "UserShelters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user/usershelters.css" />
+<link rel="stylesheet" href="~/css/user/home.css" />
+
+@Html.AntiForgeryToken()
+
+<section class="hero-block">
+    <div class="hero-text">
+        <h1>Meet Our <span class="highlight">Partner Shelters.</span></h1>
+        <p>Our partner shelters work tirelessly to give every animal a second chance at life. Find a shelter near you and make a difference today.</p>
+    </div>
+</section>
+
+<section class="shelters-list">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var shelter in Model)
+        {
+            <div class="shelter-card">
+                <div class="shelter-image">
+                    <img src="@(string.IsNullOrEmpty(shelter.shelter_img) ? "/images/placeholder.jpg" : shelter.shelter_img)" alt="@shelter.shelter_name">
+                </div>
+                <div class="shelter-info">
+                    <h3>@shelter.shelter_name</h3>
+                    @if (!string.IsNullOrEmpty(shelter.description))
+                    {
+                        <p class="shelter-desc">@shelter.description</p>
+                    }
+                    <div class="shelter-details">
+                        @if (!string.IsNullOrEmpty(shelter.address))
+                        {
+                            <div class="detail-row">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>@shelter.address, @shelter.city</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(shelter.phone))
+                        {
+                            <div class="detail-row">
+                                <i class="bi bi-telephone"></i>
+                                <span>@shelter.phone</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(shelter.email))
+                        {
+                            <div class="detail-row">
+                                <i class="bi bi-envelope"></i>
+                                <span>@shelter.email</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(shelter.website))
+                        {
+                            <div class="detail-row">
+                                <i class="bi bi-globe"></i>
+                                <a href="@shelter.website" target="_blank">@shelter.website</a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(shelter.hours))
+                        {
+                            <div class="detail-row">
+                                <i class="bi bi-clock"></i>
+                                <span>@shelter.hours</span>
+                            </div>
+                        }
+                    </div>
+                    <button class="btn-schedule" onclick="openBooking(@shelter.shelter_id, '@shelter.shelter_name')">
+                        Schedule a Visit
+                    </button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="no-shelters">No shelters found.</p>
+    }
+</section>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeBooking()"></div>
+
+<div class="booking-modal" id="bookingModal">
+    <div class="modal-header">
+        <div>
+            <p class="modal-title">Schedule a Visit</p>
+            <p class="modal-shelter-name" id="modalShelterName"></p>
+        </div>
+        <button class="modal-close" onclick="closeBooking()">✕</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="modal-two-col">
+            <div class="modal-field">
+                <label>Your Name</label>
+                <input type="text" id="b_name" placeholder="John Doe" />
+            </div>
+            <div class="modal-field">
+                <label>Phone</label>
+                <input type="text" id="b_phone" placeholder="+977 98XXXXXXXX" />
+            </div>
+        </div>
+        <div class="modal-two-col">
+            <div class="modal-field">
+                <label>Date</label>
+                <input type="date" id="b_date" />
+            </div>
+            <div class="modal-field">
+                <label>Time</label>
+                <input type="time" id="b_time" />
+            </div>
+        </div>
+        <div class="modal-field">
+            <label>Number of People</label>
+            <input type="text" id="b_people" placeholder="e.g. 2" min="1" />
+        </div>
+        <div class="modal-field">
+            <label>Reason for Visit</label>
+            <textarea id="b_reason" placeholder="e.g. Looking to adopt a dog..." rows="2"></textarea>
+        </div>
+        <p class="modal-error" id="b_error"></p>
+        <button class="modal-submit" onclick="submitBooking()">Confirm Visit</button>
+    </div>
+</div>
+
+<script>
+    let currentShelterId = null;
+
+            function openBooking(shelterId, shelterName) {
+        console.log('openBooking called', shelterId, shelterName);
+        currentShelterId = shelterId;
+        document.getElementById('modalShelterName').textContent = shelterName;
+        document.getElementById('modalOverlay').style.display = 'block';
+        document.getElementById('bookingModal').style.display = 'block';
+        document.getElementById('b_error').textContent = '';
+    }
+
+    function closeBooking() {
+        document.getElementById('modalOverlay').style.display = 'none';
+        document.getElementById('bookingModal').style.display = 'none';
+    }
+
+    function submitBooking() {
+        const name   = document.getElementById('b_name').value.trim();
+        const phone  = document.getElementById('b_phone').value.trim();
+        const date   = document.getElementById('b_date').value;
+        const time   = document.getElementById('b_time').value;
+        const people = document.getElementById('b_people').value;
+        const reason = document.getElementById('b_reason').value.trim();
+        const error  = document.getElementById('b_error');
+
+        if (!name || !phone || !date || !time || !people) {
+            error.textContent = 'Please fill in all required fields.';
+            return;
+        }
+
+        fetch('/UserShelters/ScheduleVisit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `shelter_id=${currentShelterId}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&date=${date}&time=${encodeURIComponent(time)}&reason=${encodeURIComponent(reason)}&number_of_people=${people}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                closeBooking();
+                alert('Visit scheduled successfully!');
+            }
+        });
+    }
+</script>

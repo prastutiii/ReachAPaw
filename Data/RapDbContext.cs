@@ -17,6 +17,8 @@ namespace ReachAPaw.Data
         public DbSet<PaymentModel> Payments { get; set; }
         public DbSet<AdoptionModel> Adoptions { get; set; }
         public DbSet<FavoriteModel> Favorites { get; set; }
+        public DbSet<NotificationModel> Notifications { get; set; }
+        public DbSet<VisitModel> Visits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

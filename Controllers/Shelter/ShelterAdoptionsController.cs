@@ -63,6 +63,14 @@ namespace ReachAPaw.Controllers
                     pet.status = "Pending";
                 }
 
+                _context.Notifications.Add(new NotificationModel
+                {
+                    message = $"Your adoption application for {pet?.pet_name} has been Approved!",
+                    is_read = false,
+                    created_at = DateTime.Now,
+                    user_id = adoption.user_id
+                });
+
                 _context.SaveChanges();
             }
             return RedirectToAction("ViewAdoptions", new { id });
@@ -74,6 +82,18 @@ namespace ReachAPaw.Controllers
             if (adoption != null)
             {
                 adoption.status = "Rejected";
+
+                var pet = _context.Pets.Find(adoption.pet_id);
+                if (pet != null) pet.status = "Available";
+
+                _context.Notifications.Add(new NotificationModel
+                {
+                    message = $"Your adoption application for {pet?.pet_name} has been Rejected.",
+                    is_read = false,
+                    created_at = DateTime.Now,
+                    user_id = adoption.user_id
+                });
+
                 _context.SaveChanges();
             }
             return RedirectToAction("ViewAdoptions", new { id });
@@ -85,6 +105,18 @@ namespace ReachAPaw.Controllers
             if (adoption != null)
             {
                 adoption.status = "Adopted";
+
+                var pet = _context.Pets.Find(adoption.pet_id);
+                if (pet != null) pet.status = "Adopted";
+
+                _context.Notifications.Add(new NotificationModel
+                {
+                    message = $"Congratulations! You have successfully Adopted {pet?.pet_name}.",
+                    is_read = false,
+                    created_at = DateTime.Now,
+                    user_id = adoption.user_id
+                });
+
                 _context.SaveChanges();
             }
             return RedirectToAction("ViewAdoptions", new { id });
@@ -99,17 +131,6 @@ namespace ReachAPaw.Controllers
                 _context.SaveChanges();
             }
             return RedirectToAction("ViewAdoptions", new { id });
-        }
-
-        public IActionResult DeleteAdoption(int id)
-        {
-            var adoption = _context.AdoptionApplications.Find(id);
-            if (adoption != null)
-            {
-                _context.AdoptionApplications.Remove(adoption);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("ShelterAdoptions");
         }
     }
 }

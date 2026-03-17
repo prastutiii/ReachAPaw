@@ -1,6 +1,6 @@
 ﻿@model ReachAPaw.Models.PetModel
 @{
-    ViewData["Title"] = "Add New Pet";
+    ViewData["Title"] = "Edit Pet";
     Layout = "~/Views/Shared/_ShelterLayout.cshtml";
 }
 
@@ -14,12 +14,12 @@
                 &lt; Back
             </a>
         </div>
-        <h2>Add New Pet</h2>
-        <p>Fill in the details below to list a pet for adoption.</p>
+        <h2>Edit Pet</h2>
+        <p>Update the details below for @Model.pet_name.</p>
     </div>
 
     <div class="form-card">
-        <form asp-controller="ShelterPets" asp-action="AddPets" method="post" enctype="multipart/form-data">
+        <form asp-controller="ShelterPets" asp-action="EditPet" asp-route-id="@Model.pet_id" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
 
             <div class="section-title">Basic Info</div>
@@ -27,11 +27,11 @@
             <div class="two-col">
                 <div class="form-group">
                     <label class="field-label">Pet Name</label>
-                    <input name="pet_name" class="form-control" placeholder="e.g. Max" required />
+                    <input name="pet_name" class="form-control" value="@Model.pet_name" required />
                 </div>
                 <div class="form-group">
                     <label class="field-label">Age</label>
-                    <input name="age" class="form-control" placeholder="e.g. 6 months" required />
+                    <input name="age" class="form-control" value="@Model.age" required />
                 </div>
             </div>
 
@@ -40,19 +40,19 @@
                     <label class="field-label">Species</label>
                     <div class="radio-group">
                         <div class="radio-pill">
-                            <input type="radio" name="species" id="dog" value="Dog" required>
+                            <input type="radio" name="species" id="dog" value="Dog" @(Model.species == "Dog" ? "checked" : "")>
                             <label for="dog">Dog</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="species" id="cat" value="Cat">
+                            <input type="radio" name="species" id="cat" value="Cat" @(Model.species == "Cat" ? "checked" : "")>
                             <label for="cat">Cat</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="species" id="cattle" value="Cattle">
+                            <input type="radio" name="species" id="cattle" value="Cattle" @(Model.species == "Cattle" ? "checked" : "")>
                             <label for="cattle">Cattle</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="species" id="other" value="Other">
+                            <input type="radio" name="species" id="other" value="Other" @(Model.species == "Other" ? "checked" : "")>
                             <label for="other">Other</label>
                         </div>
                     </div>
@@ -61,11 +61,11 @@
                     <label class="field-label">Gender</label>
                     <div class="radio-group">
                         <div class="radio-pill">
-                            <input type="radio" name="gender" id="male" value="Male" required>
+                            <input type="radio" name="gender" id="male" value="Male" @(Model.gender == "Male" ? "checked" : "")>
                             <label for="male">Male</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="gender" id="female" value="Female">
+                            <input type="radio" name="gender" id="female" value="Female" @(Model.gender == "Female" ? "checked" : "")>
                             <label for="female">Female</label>
                         </div>
                     </div>
@@ -74,19 +74,19 @@
 
             <div class="form-group">
                 <label class="field-label">Location</label>
-                <input name="location" class="form-control" placeholder="e.g. Kathmandu" />
+                <input name="location" class="form-control" value="@Model.location" />
             </div>
 
             <div class="section-title">About</div>
 
             <div class="form-group">
                 <label class="field-label">Description</label>
-                <textarea name="description" class="form-control" placeholder="Tell us about this pet..." required></textarea>
+                <textarea name="description" class="form-control" required>@Model.description</textarea>
             </div>
 
             <div class="form-group">
                 <label class="field-label">Ideal Home</label>
-                <textarea name="ideal_home" class="form-control" placeholder="What kind of home suits this pet?" required></textarea>
+                <textarea name="ideal_home" class="form-control" required>@Model.ideal_home</textarea>
             </div>
 
             <div class="section-title">Health & Status</div>
@@ -95,19 +95,19 @@
                 <label class="field-label">Health Status</label>
                 <div class="radio-group">
                     <div class="radio-pill">
-                        <input type="radio" name="health_status" id="excellent" value="Excellent" required>
+                        <input type="radio" name="health_status" id="excellent" value="Excellent" @(Model.health_status == "Excellent" ? "checked" : "")>
                         <label for="excellent">Excellent</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="health_status" id="good" value="Good">
+                        <input type="radio" name="health_status" id="good" value="Good" @(Model.health_status == "Good" ? "checked" : "")>
                         <label for="good">Good</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="health_status" id="average" value="Average">
+                        <input type="radio" name="health_status" id="average" value="Average" @(Model.health_status == "Average" ? "checked" : "")>
                         <label for="average">Average</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="health_status" id="bad" value="Bad">
+                        <input type="radio" name="health_status" id="bad" value="Bad" @(Model.health_status == "Bad" ? "checked" : "")>
                         <label for="bad">Bad</label>
                     </div>
                 </div>
@@ -118,11 +118,11 @@
                     <label class="field-label">Vaccinated</label>
                     <div class="radio-group">
                         <div class="radio-pill">
-                            <input type="radio" name="is_vaccinated" id="vacc_yes" value="True" required>
+                            <input type="radio" name="is_vaccinated" id="vacc_yes" value="True" @(Model.is_vaccinated ? "checked" : "")>
                             <label for="vacc_yes">Yes</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="is_vaccinated" id="vacc_no" value="False">
+                            <input type="radio" name="is_vaccinated" id="vacc_no" value="False" @(!Model.is_vaccinated ? "checked" : "")>
                             <label for="vacc_no">No</label>
                         </div>
                     </div>
@@ -131,11 +131,11 @@
                     <label class="field-label">Neutered</label>
                     <div class="radio-group">
                         <div class="radio-pill">
-                            <input type="radio" name="is_neutered" id="neut_yes" value="True" required>
+                            <input type="radio" name="is_neutered" id="neut_yes" value="True" @(Model.is_neutered ? "checked" : "")>
                             <label for="neut_yes">Yes</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="is_neutered" id="neut_no" value="False">
+                            <input type="radio" name="is_neutered" id="neut_no" value="False" @(!Model.is_neutered ? "checked" : "")>
                             <label for="neut_no">No</label>
                         </div>
                     </div>
@@ -147,18 +147,18 @@
                     <label class="field-label">Microchipped</label>
                     <div class="radio-group">
                         <div class="radio-pill">
-                            <input type="radio" name="is_microchipped" id="chip_yes" value="True" required>
+                            <input type="radio" name="is_microchipped" id="chip_yes" value="True" @(Model.is_microchipped ? "checked" : "")>
                             <label for="chip_yes">Yes</label>
                         </div>
                         <div class="radio-pill">
-                            <input type="radio" name="is_microchipped" id="chip_no" value="False">
+                            <input type="radio" name="is_microchipped" id="chip_no" value="False" @(!Model.is_microchipped ? "checked" : "")>
                             <label for="chip_no">No</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="field-label">Adoption Fee (Rs.)</label>
-                    <input name="fee" class="form-control" placeholder="e.g. 500" required />
+                    <input name="fee" class="form-control" value="@Model.fee" required />
                 </div>
             </div>
 
@@ -166,19 +166,19 @@
                 <label class="field-label">Status</label>
                 <div class="radio-group">
                     <div class="radio-pill">
-                        <input type="radio" name="status" id="available" value="Available" required>
+                        <input type="radio" name="status" id="available" value="Available" @(Model.status == "Available" ? "checked" : "")>
                         <label for="available">Available</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="status" id="pending" value="Pending">
+                        <input type="radio" name="status" id="pending" value="Pending" @(Model.status == "Pending" ? "checked" : "")>
                         <label for="pending">Pending</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="status" id="adopted" value="Adopted">
+                        <input type="radio" name="status" id="adopted" value="Adopted" @(Model.status == "Adopted" ? "checked" : "")>
                         <label for="adopted">Adopted</label>
                     </div>
                     <div class="radio-pill">
-                        <input type="radio" name="status" id="unavailable" value="Unavailable">
+                        <input type="radio" name="status" id="unavailable" value="Unavailable" @(Model.status == "Unavailable" ? "checked" : "")>
                         <label for="unavailable">Unavailable</label>
                     </div>
                 </div>
@@ -186,19 +186,27 @@
 
             <div class="section-title">Photo</div>
 
+            @if (!string.IsNullOrEmpty(Model.image_url))
+            {
+                <div class="form-group">
+                    <label class="field-label">Current Photo</label>
+                    <img src="@Model.image_url" alt="@Model.pet_name" style="width:120px; height:120px; object-fit:cover; border-radius:10px;" />
+                </div>
+            }
+
             <div class="form-group">
                 <div class="upload-area" onclick="document.getElementById('pet_file').click()">
-                    <input type="file" name="pet_file" id="pet_file" hidden required
+                    <input type="file" name="pet_file" id="pet_file" hidden
                            onchange="document.getElementById('file-name').textContent = this.files[0].name" />
                     <label class="upload-label">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Click to upload or drag and drop</span>
-                        <span class="upload-hint" id="file-name">PNG, JPG up to 5MB</span>
+                        <span>Click to upload a new photo</span>
+                        <span class="upload-hint" id="file-name">Leave empty to keep current photo</span>
                     </label>
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">Add Pet</button>
+            <button type="submit" class="btn-submit">Save Changes</button>
 
         </form>
     </div>

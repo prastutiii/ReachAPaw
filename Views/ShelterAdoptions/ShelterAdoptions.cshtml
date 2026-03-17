@@ -94,10 +94,10 @@
                                onclick="return confirm('Reject this application?')">Reject</a>
                         }
 
-                        <a asp-controller="ShelterAdoptions" asp-action="DeleteAdoption"
-                           asp-route-id="@adoption.adoption_id"
-                           class="action-btn delete"
-                           onclick="return confirm('Delete this application?')">Delete</a>
+                        <button class="action-btn delete"
+                                onclick="removeCard(this)">
+                            Delete
+                        </button>
                     </div>
                 </div>
             }
@@ -110,3 +110,11 @@
         }
     </div>
 </div>
+
+<script>
+    function removeCard(btn) {
+        if (confirm('Remove this card from view?')) {
+            btn.closest('.adoption-card').remove();
+        }
+    }
+</script>

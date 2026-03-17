@@ -25,7 +25,10 @@
         <div class="details-layout">
             <div class="info-main">
                 <div class="header-inline">
-                    <h1>@Model.pet_name</h1>
+                    <div>
+                        <h1>@Model.pet_name</h1>
+                        <span class="status-badge @Model.status?.ToLower().Trim()">@Model.status</span>
+                    </div>
                     <div class="adoption-fee">
                         <small>Adoption Fee</small>
                         <span>Rs. @Model.fee</span>

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<ReachAPaw.Models.VisitModel>
+@{
+    ViewData["Title"] = "ShelterVisits";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var filtered = filter == "all" ? Model : Model.Where(v => v.status.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/shelter/shelterdash.css" />
+<link rel="stylesheet" href="~/css/shelter/sheltervisits.css" />
+
+<div class="welcome">
+    <h2>Hello, Shelter Admin!</h2>
+    <h6>Here are the scheduled visits for your shelter.</h6>
+</div>
+
+<div class="visits-wrapper">
+    <div class="tabs">
+        <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@Model.Count()</span></a>
+        <a href="?filter=scheduled" class="tab @(filter == "scheduled" ? "active" : "")">Scheduled <span class="count">@Model.Count(v => v.status.ToLower().Trim() == "scheduled")</span></a>
+        <a href="?filter=completed" class="tab @(filter == "completed" ? "active" : "")">Completed <span class="count">@Model.Count(v => v.status.ToLower().Trim() == "completed")</span></a>
+        <a href="?filter=cancelled" class="tab @(filter == "cancelled" ? "active" : "")">Cancelled <span class="count">@Model.Count(v => v.status.ToLower().Trim() == "cancelled")</span></a>
+    </div>
+
+    <div class="visits-list">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var visit in filtered)
+            {
+                <div class="visit-card">
+                    <div class="visit-header">
+                        <div class="visitor-info">
+                            <div class="visitor-avatar">@visit.name[0]</div>
+                            <div>
+                                <h3>@visit.name</h3>
+                                <p>@visit.phone</p>
+                            </div>
+                        </div>
+                        <span class="status-badge @visit.status.ToLower().Trim()">@visit.status</span>
+                    </div>
+
+                    <div class="visit-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Date</span>
+                            <span>@visit.date</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Time</span>
+                            <span>@visit.time</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">People</span>
+                            <span>@visit.people_no</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(visit.reason))
+                        {
+                            <div class="detail-item full">
+                                <span class="detail-label">Reason</span>
+                                <span>@visit.reason</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (visit.status.ToLower().Trim() == "scheduled")
+                    {
+                        <div class="visit-actions">
+                            <a asp-controller="ShelterVisits" asp-action="CompleteVisit"
+                               asp-route-id="@visit.visit_id"
+                               class="action-btn approve"
+                               onclick="return confirm('Mark this visit as completed?')">Complete</a>
+                            <a asp-controller="ShelterVisits" asp-action="CancelVisit"
+                               asp-route-id="@visit.visit_id"
+                               class="action-btn reject"
+                               onclick="return confirm('Cancel this visit?')">Cancel</a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-visits">
+                <p>No @(filter == "all" ? "" : filter) visits found.</p>
+            </div>
+        }
+    </div>
+</div>

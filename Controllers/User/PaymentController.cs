@@ -103,12 +103,6 @@ namespace ReachAPaw.Controllers
             // mark application as completed
             adoption.status = "Completed";
 
-            var pet = _context.Pets.Find(adoption.pet_id);
-            if (pet != null)
-            {
-                pet.status = "Adopted";
-            }
-
             _context.SaveChanges();
 
             return RedirectToAction("Certificate", new { id });

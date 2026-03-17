@@ -31,6 +31,7 @@ namespace ReachAPaw.Controllers
             return View(pets);
         }
 
+        [HttpGet]
         public IActionResult AddPets()
         {
             return View();
@@ -118,5 +119,84 @@ namespace ReachAPaw.Controllers
 
             return View(pet);
         }
+
+        [HttpGet]
+        public IActionResult EditPet(int id)
+        {
+            System.Diagnostics.Debug.WriteLine($"EditPet called with id: {id}");
+
+            var pet = _context.Pets.Find(id);
+
+            System.Diagnostics.Debug.WriteLine($"Pet found: {pet?.pet_name ?? "NULL"}");
+
+            if (pet == null)
+                return NotFound();
+
+            return View(pet);
+        }
+
+        [HttpPost]
+        public IActionResult EditPet(int id,
+            string pet_name,
+            string species,
+            string gender,
+            string age,
+            string location,
+            string description,
+            string ideal_home,
+            string health_status,
+            string is_vaccinated,
+            string is_neutered,
+            string is_microchipped,
+            string status,
+            string fee,
+            IFormFile pet_file)
+        {
+            var pet = _context.Pets.Find(id);
+            if (pet == null)
+                return NotFound();
+
+            if (pet_file != null && pet_file.Length > 0)
+            {
+                string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/pets");
+                Directory.CreateDirectory(uploads);
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(pet_file.FileName);
+                using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                {
+                    pet_file.CopyTo(stream);
+                }
+                pet.image_url = "/images/pets/" + fileName;
+            }
+
+            pet.pet_name = pet_name;
+            pet.species = species;
+            pet.gender = gender;
+            pet.age = age;
+            pet.location = location;
+            pet.description = description;
+            pet.ideal_home = ideal_home;
+            pet.health_status = health_status;
+            pet.is_vaccinated = Convert.ToBoolean(is_vaccinated);
+            pet.is_neutered = Convert.ToBoolean(is_neutered);
+            pet.is_microchipped = Convert.ToBoolean(is_microchipped);
+            pet.status = status;
+            pet.fee = fee;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ShelterPets");
+        }
+
+        public IActionResult DeletePet(int id)
+        {
+            var pet = _context.Pets.Find(id);
+            if (pet != null)
+            {
+                _context.Pets.Remove(pet);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("ShelterPets");
+        }
+
     }
 }

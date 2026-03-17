@@ -193,6 +193,7 @@
     .action-btn.delete {
         background: #fce4ec;
         color: #c62828;
+        border: none;
     }
 
 .no-adoptions {
