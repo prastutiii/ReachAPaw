@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Add Shelter";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminshelter.css" />
+
+<div class="form-wrapper">
+    <a href="@Url.Action("AdminShelters", "AdminShelters")" class="back-button">← Back to Shelters</a>
+
+    <div class="form-card">
+        <h2 style="color: #3e2723; margin: 0 0 24px; font-size: 1.4rem;">Add New Shelter</h2>
+
+        <form asp-controller="AdminShelters" asp-action="AddShelter" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <!-- Shelter Information Section -->
+            <div class="form-section-title">Shelter Information</div>
+
+            <div class="form-group">
+                <label for="shelter_name">Shelter Name *</label>
+                <input type="text" id="shelter_name" name="shelter_name" placeholder="Enter shelter name" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="shelter@example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="Street address" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="City" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pan_number">PAN Number</label>
+                    <input type="text" id="pan_number" name="pan_number" placeholder="PAN" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="url" id="website" name="website" placeholder="https://example.com" />
+            </div>
+
+            <div class="form-group">
+                <label for="hours">Operating Hours</label>
+                <input type="text" id="hours" name="hours" placeholder="e.g., 9:00 AM - 5:00 PM" />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Shelter description and details..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="active" selected>Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Shelter Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="shelterImage" name="shelterImage" accept="image/*" />
+                        <label for="shelterImage">Choose Image</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imagePreview"></div>
+
+            <!-- User Information Section -->
+            <div class="form-section-title">Manager Account Information</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username *</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" name="userEmail" placeholder="manager@example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="userPhone">Phone</label>
+                    <input type="tel" id="userPhone" name="userPhone" placeholder="(123) 456-7890" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="userAddress">Address</label>
+                <input type="text" id="userAddress" name="userAddress" placeholder="Street address" />
+            </div>
+
+            <div class="form-group">
+                <label>Manager Photo</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="userImage" name="userImage" accept="image/*" />
+                    <label for="userImage">Choose Photo</label>
+                </div>
+            </div>
+
+            <div id="userImagePreview"></div>
+
+            <div class="form-actions">
+                <a href="@Url.Action("AdminShelters", "AdminShelters")" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Add Shelter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('shelterImage')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.innerHTML = `<img src="${event.target.result}" alt="Preview" class="preview-image" style="margin-top: 12px;" />`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('userImage')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('userImagePreview');
+                    preview.innerHTML = `<img src="${event.target.result}" alt="Preview" class="preview-image" style="margin-top: 12px;" />`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

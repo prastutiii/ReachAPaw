@@ -1,0 +1,205 @@
+@using ReachAPaw.Models
+@model AdoptionApplicationModel
+@{
+    ViewData["Title"] = "View Adoption";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminadoptions.css" />
+
+<div class="detail-wrapper">
+    <a href="@Url.Action("AdminAdoptions", "AdminAdoptions")" class="back-button">← Back to Adoptions</a>
+
+    <div class="detail-header">
+        <h2 style="color: #3e2723; margin: 0; font-size: 1.6rem;">Adoption Application - @Model.Pets?.pet_name</h2>
+        <div class="detail-actions">
+            <span class="status-badge @(Model.status?.ToLower() ?? "")">@(Model.status ?? "N/A")</span>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-section">
+            <h4>Pet Information</h4>
+            <p>
+                <span class="label">Pet Name:</span><br />
+                @(Model.Pets?.pet_name ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">Species:</span><br />
+                @(Model.Pets?.species ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">Age:</span><br />
+                @(Model.Pets?.age ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">Gender:</span><br />
+                @(Model.Pets?.gender ?? "Unknown")
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Applicant Information</h4>
+            <p>
+                <span class="label">Name:</span><br />
+                @(Model.Users?.username ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">Email:</span><br />
+                @if (!string.IsNullOrEmpty(Model.Users?.email))
+                {
+                    <a href="mailto:@Model.Users.email" style="color: #5d4037; text-decoration: none;">@Model.Users.email</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Phone:</span><br />
+                @if (!string.IsNullOrEmpty(Model.Users?.phone))
+                {
+                    <a href="tel:@Model.Users.phone" style="color: #5d4037; text-decoration: none;">@Model.Users.phone</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Address:</span><br />
+                @(string.IsNullOrEmpty(Model.Users?.address) ? "Not provided" : Model.Users.address)
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Shelter Information</h4>
+            <p>
+                <span class="label">Shelter Name:</span><br />
+                @(Model.Shelters?.shelter_name ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">City:</span><br />
+                @(Model.Shelters?.city ?? "Unknown")
+            </p>
+            <p>
+                <span class="label">Email:</span><br />
+                @if (!string.IsNullOrEmpty(Model.Shelters?.email))
+                {
+                    <a href="mailto:@Model.Shelters.email" style="color: #5d4037; text-decoration: none;">@Model.Shelters.email</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Phone:</span><br />
+                @if (!string.IsNullOrEmpty(Model.Shelters?.phone))
+                {
+                    <a href="tel:@Model.Shelters.phone" style="color: #5d4037; text-decoration: none;">@Model.Shelters.phone</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Application Details</h4>
+            <p>
+                <span class="label">Applied Date:</span><br />
+                @Model.applied_date.ToString("MMMM dd, yyyy")
+            </p>
+            <p>
+                <span class="label">Status:</span><br />
+                <span class="status-badge @(Model.status?.ToLower() ?? "")">@(Model.status ?? "N/A")</span>
+            </p>
+        </div>
+
+        @if (Model.ApplicationDetails != null)
+        {
+            <div class="detail-section">
+                <h4>Applicant Questionnaire</h4>
+                <p>
+                    <span class="label">Full Name:</span><br />
+                    @(Model.ApplicationDetails.full_name ?? "Not provided")
+                </p>
+                <p>
+                    <span class="label">Email:</span><br />
+                    @if (!string.IsNullOrEmpty(Model.ApplicationDetails.email))
+                    {
+                        <a href="mailto:@Model.ApplicationDetails.email" style="color: #5d4037; text-decoration: none;">@Model.ApplicationDetails.email</a>
+                    }
+                    else
+                    {
+                        <span style="color: #999;">Not provided</span>
+                    }
+                </p>
+                <p>
+                    <span class="label">Phone:</span><br />
+                    @if (!string.IsNullOrEmpty(Model.ApplicationDetails.phone))
+                    {
+                        <a href="tel:@Model.ApplicationDetails.phone" style="color: #5d4037; text-decoration: none;">@Model.ApplicationDetails.phone</a>
+                    }
+                    else
+                    {
+                        <span style="color: #999;">Not provided</span>
+                    }
+                </p>
+                <p>
+                    <span class="label">City:</span><br />
+                    @(Model.ApplicationDetails.city ?? "Not provided")
+                </p>
+                <p>
+                    <span class="label">Address:</span><br />
+                    @(Model.ApplicationDetails.address ?? "Not provided")
+                </p>
+                <p>
+                    <span class="label">Home Type:</span><br />
+                    @(Model.ApplicationDetails.home_type.ToString() ?? "Not provided")
+                </p>
+                <p>
+                    <span class="label">Own or Rent:</span><br />
+                    @(Model.ApplicationDetails.own_or_rent.ToString() ?? "Not provided")
+                </p>
+                <p>
+                    <span class="label">Has Yard:</span><br />
+                    @(Model.ApplicationDetails.has_yard ? "Yes" : "No")
+                </p>
+                <p>
+                    <span class="label">Has Children:</span><br />
+                    @(Model.ApplicationDetails.has_children ? "Yes" : "No")
+                </p>
+                <p>
+                    <span class="label">Other Pets:</span><br />
+                    @(Model.ApplicationDetails.other_pets ? "Yes" : "No")
+                </p>
+                @if (!string.IsNullOrEmpty(Model.ApplicationDetails.pet_experience))
+                {
+                    <p>
+                        <span class="label">Pet Experience:</span><br />
+                        @Model.ApplicationDetails.pet_experience
+                    </p>
+                }
+                @if (!string.IsNullOrEmpty(Model.ApplicationDetails.reason))
+                {
+                    <p>
+                        <span class="label">Reason for Adoption:</span><br />
+                        @Model.ApplicationDetails.reason
+                    </p>
+                }
+                @if (!string.IsNullOrEmpty(Model.ApplicationDetails.valid_document))
+                {
+                    <p>
+                        <span class="label">Valid Document:</span><br />
+                        <img src="~/images/documents/@Model.ApplicationDetails.valid_document"
+                             alt="Valid Document"
+                             style="max-width: 300px; height: auto;" />
+                    </p>
+                }
+            </div>
+        }
+    </div>
+</div>

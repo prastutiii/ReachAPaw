@@ -1,5 +1,166 @@
 ﻿@{
     ViewData["Title"] = "AdminDash";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-Admin Dashboard
+<link rel="stylesheet" href="~/css/admin/admindash.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="dash-wrapper">
+
+    <div class="greeting-card">
+        <h2>Hi, Super Admin!</h2>
+        <p>This is what's happening in our platform lately.</p>
+    </div>
+
+    <h4 class="section-title">Dashboard</h4>
+
+    <div class="stat-grid">
+        <div class="stat-card green">
+            <p>Total Users</p>
+            <h3>@ViewBag.TotalUsers</h3>
+        </div>
+        <div class="stat-card purple">
+            <p>Total Pets</p>
+            <h3>@ViewBag.TotalPets</h3>
+        </div>
+        <div class="stat-card amber">
+            <p>Total Shelters</p>
+            <h3>@ViewBag.TotalShelters</h3>
+        </div>
+        <div class="stat-card teal">
+            <p>Total Adoptions</p>
+            <h3>@ViewBag.TotalAdoptions</h3>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h5>Monthly Adoptions</h5>
+            <canvas id="monthlyAdoptionsChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h5>Adoptions by Status</h5>
+            <canvas id="adoptionStatusChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h5>Pets by Species</h5>
+            <canvas id="petSpeciesChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h5>Pets by Status</h5>
+            <canvas id="petStatusChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+        const monthlyAdoptions = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                    ((IEnumerable<dynamic>)ViewBag.MonthlyAdoptions)
+                    .Select(x => new { month = (int)x.Month, count = (int)x.Count })
+            ));
+
+    const adoptionsByStatus = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ((IEnumerable<dynamic>)ViewBag.AdoptionsByStatus)
+                .Select(x => new { status = (string)x.Status, count = (int)x.Count })
+        ));
+
+    const petsBySpecies = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ((IEnumerable<dynamic>)ViewBag.PetsBySpecies)
+                .Select(x => new { species = (string)x.Species, count = (int)x.Count })
+        ));
+
+    const petsByStatus = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                ((IEnumerable<dynamic>)ViewBag.PetsByStatus)
+                .Select(x => new { status = (string)x.Status, count = (int)x.Count })
+        ));
+
+    new Chart(document.getElementById('monthlyAdoptionsChart'), {
+        type: 'bar',
+        data: {
+            labels: monthlyAdoptions.map(d => monthNames[d.month - 1]),
+            datasets: [{
+                data: monthlyAdoptions.map(d => d.count),
+                backgroundColor: '#d6eef7',
+                borderColor: '#3a6b7c',
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: '#a1887f', font: { size: 11 } }, grid: { color: '#f5ede8' } },
+                x: { ticks: { color: '#a1887f', font: { size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+
+        new Chart(document.getElementById('adoptionStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: adoptionsByStatus.map(d => d.status),
+                datasets: [{
+                    data: adoptionsByStatus.map(d => d.count),
+                    backgroundColor: ['#d6eef7','#d6ecd4','#fce4ec','#f5e6c0','#f0f0f0'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#5d4037', padding: 12, font: { size: 11 } }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        new Chart(document.getElementById('petSpeciesChart'), {
+            type: 'bar',
+            data: {
+                labels: petsBySpecies.map(d => d.species),
+                datasets: [{
+                    data: petsBySpecies.map(d => d.count),
+                    backgroundColor: '#ede8f5',
+                    borderColor: '#6a4a9a',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { color: '#a1887f', font: { size: 11 } }, grid: { color: '#f5ede8' } },
+                    x: { ticks: { color: '#a1887f', font: { size: 11 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('petStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: petsByStatus.map(d => d.status),
+                datasets: [{
+                    data: petsByStatus.map(d => d.count),
+                    backgroundColor: ['#d6ecd4','#f5e6c0','#d6eef7','#f0f0f0'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#5d4037', padding: 12, font: { size: 11 } }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    </script>
+}

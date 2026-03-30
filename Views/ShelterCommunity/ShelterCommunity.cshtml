@@ -1,0 +1,135 @@
+﻿@model IEnumerable<ReachAPaw.Models.CommunityModel>
+@{
+    ViewData["Title"] = "ShelterCommunity";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+    var categories = ViewBag.Categories as List<ReachAPaw.Models.CategoryModel>;
+}
+
+<link rel="stylesheet" href="~/css/shelter/sheltercommunity.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/css/shelter/shelterdash.css" />
+
+<div class="welcome">
+    <h2>Hello, Shelter Admin!</h2>
+    <h6>Take a look at our Reach.A.Paw Community and share your stories</h6>
+</div>
+
+
+@Html.AntiForgeryToken()
+
+    <div class="sc-hero">
+        <div class="sc-hero-left">
+            <h3>Reach.A.Paw Community Forum</h3>
+            <p>Connect with fellow pet lovers, share stories, tips, and support each other.</p>
+        </div>
+        <button class="btn-start-discussion" onclick="openPostModal()">Start a Discussion</button>
+    </div>
+
+    <div class="sc-discussions">
+        <h4>Recent Discussions</h4>
+
+        <div class="discussions-list">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var post in Model)
+                {
+                    <div class="discussion-card">
+                        <div class="user-avatar">@post.Users?.username[0]</div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <h5>@post.title</h5>
+                                <div class="meta-row">
+                                    <span class="username">@@@post.Users?.username</span>
+                                    <span class="time">@((DateTime.Now - post.created_at).TotalHours < 24 ? $"{(int)(DateTime.Now - post.created_at).TotalHours} hrs ago" : post.created_at.ToString("MMM dd, yyyy"))</span>
+                                </div>
+                            </div>
+                            <p class="card-body">@post.post_content</p>
+                            <div class="card-actions">
+                                <span class="action-count"><i class="bi bi-heart"></i> 0</span>
+                                <span class="action-count"><i class="bi bi-chat"></i> 0</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="no-posts">No discussions yet. Be the first to start one!</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Create Post Modal -->
+<div class="modal-overlay" id="postModalOverlay" onclick="closePostModal()"></div>
+
+<div class="post-modal" id="postModal">
+    <div class="modal-header">
+        <div>
+            <p class="modal-title">Start a Discussion</p>
+            <p class="modal-sub">Share your thoughts with the community</p>
+        </div>
+        <button class="modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div class="modal-field">
+            <label>Title</label>
+            <input type="text" id="p_title" placeholder="e.g. Tips for first time pet owners..." />
+        </div>
+        <div class="modal-field">
+            <label>Category</label>
+            <select id="p_category">
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.category_id">@cat.category_name</option>
+                }
+            </select>
+        </div>
+        <div class="modal-field">
+            <label>Content</label>
+            <textarea id="p_content" rows="4" placeholder="Write your post here..."></textarea>
+        </div>
+        <p class="modal-error" id="p_error"></p>
+        <button class="modal-submit" onclick="submitPost()">Post Discussion</button>
+    </div>
+</div>
+
+<script>
+    function openPostModal() {
+        document.getElementById('postModalOverlay').style.display = 'block';
+        document.getElementById('postModal').style.display = 'block';
+        document.getElementById('p_error').textContent = '';
+    }
+
+    function closePostModal() {
+        document.getElementById('postModalOverlay').style.display = 'none';
+        document.getElementById('postModal').style.display = 'none';
+    }
+
+    function submitPost() {
+        const title    = document.getElementById('p_title').value.trim();
+        const content  = document.getElementById('p_content').value.trim();
+        const category = document.getElementById('p_category').value;
+        const error    = document.getElementById('p_error');
+
+        if (!title || !content) {
+            error.textContent = 'Please fill in all fields.';
+            return;
+        }
+
+        fetch('/ShelterCommunity/CreatePost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&category_id=${category}`
+        })
+        .then(res => {
+            if (res.ok) {
+                closePostModal();
+                location.reload();
+            }
+        });
+    }
+</script>

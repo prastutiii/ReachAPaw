@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ReachAPaw.Models.PetModel>
+@{
+    ViewData["Title"] = "AdminPets";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var filtered = filter == "all" ? Model : Model.Where(p => p.status.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/admin/adminpets.css" />
+
+<div class="page-wrapper">
+
+    <div class="greeting-card">
+        <h2>Hi, Super Admin!</h2>
+        <p>This is what's happening in our pets lately.</p>
+    </div>
+
+    <div class="page-header">
+        <h4>All Pets</h4>
+        <div class="tabs">
+            <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@Model.Count()</span></a>
+            <a href="?filter=Available" class="tab @(filter == "Available" ? "active" : "")">Available <span class="count">@Model.Count(p => p.status.ToLower().Trim() == "available")</span></a>
+            <a href="?filter=Pending" class="tab @(filter == "Pending" ? "active" : "")">Pending <span class="count">@Model.Count(p => p.status.ToLower().Trim() == "pending")</span></a>
+            <a href="?filter=Adopted" class="tab @(filter == "Adopted" ? "active" : "")">Adopted <span class="count">@Model.Count(p => p.status.ToLower().Trim() == "adopted")</span></a>
+            <a href="?filter=Unavailable" class="tab @(filter == "Unavailable" ? "active" : "")">Unavailable <span class="count">@Model.Count(p => p.status.ToLower().Trim() == "unavailable")</span></a>
+        </div>
+    </div>
+
+    <div class="pets-list">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var pet in filtered)
+            {
+                <div class="pet-row">
+                    <img src="@(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)"
+                         alt="@pet.pet_name" class="pet-row-img" />
+                    <div class="pet-row-info">
+                        <h5>@pet.pet_name</h5>
+                        <p>@pet.Shelters?.shelter_name • @pet.species • @pet.age old</p>
+                    </div>
+                    <div class="pet-row-right">
+                        <span class="status-badge @pet.status?.ToLower().Trim()">@pet.status</span>
+                        <a asp-controller="AdminPets" asp-action="ViewPet"
+                           asp-route-id="@pet.pet_id"
+                           class="btn-view">View</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-data">No pets found.</p>
+        }
+    </div>
+</div>

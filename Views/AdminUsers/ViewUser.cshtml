@@ -1,0 +1,109 @@
+@using ReachAPaw.Models
+@model UserModel
+@{
+    ViewData["Title"] = "View User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminusers.css" />
+
+<div class="detail-wrapper">
+    <a href="@Url.Action("AdminUsers", "AdminUsers")" class="back-button">← Back to Users</a>
+
+    <div class="detail-header">
+        <h2 style="color: #3e2723; margin: 0; font-size: 1.6rem;">@Model.username</h2>
+        <div class="detail-actions">
+            <a href="@Url.Action("EditUser", "AdminUsers", new { id = Model.user_id })" class="btn-secondary">✎ Edit</a>
+            <button type="button" class="btn-danger" onclick="showDeleteModal()">🗑 Delete</button>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        @if (!string.IsNullOrEmpty(Model.image_url))
+        {
+            <img src="@Model.image_url" alt="@Model.username" class="detail-image" />
+        }
+        else
+        {
+            <div class="detail-image-initial">@Model.username[0].ToString().ToUpper()</div>
+        }
+
+        <div class="detail-section">
+            <h4>Account Information</h4>
+            <p>
+                <span class="label">Username:</span><br />
+                @Model.username
+            </p>
+            <p>
+                <span class="label">Email:</span><br />
+                @if (!string.IsNullOrEmpty(Model.email))
+                {
+                    <a href="mailto:@Model.email" style="color: #5d4037; text-decoration: none;">@Model.email</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Phone:</span><br />
+                @if (!string.IsNullOrEmpty(Model.phone))
+                {
+                    <a href="tel:@Model.phone" style="color: #5d4037; text-decoration: none;">@Model.phone</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Address:</span><br />
+                @(string.IsNullOrEmpty(Model.address) ? "Not provided" : Model.address)
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Role & Status</h4>
+            <p>
+                <span class="label">Role:</span><br />
+                @(Model.role ?? "User")
+            </p>
+            <p>
+                <span class="label">Status:</span><br />
+                <span class="status-badge @(Model.status?.ToLower() ?? "")">@(Model.status ?? "N/A")</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>Delete User</h3>
+        <p>Are you sure you want to delete user <strong>@Model.username</strong>? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn-cancel" onclick="hideDeleteModal()">Cancel</button>
+            <form method="post" asp-controller="AdminUsers" asp-action="DeleteUser" asp-route-id="@Model.user_id" style="display: inline;">
+                <button type="submit" class="modal-btn-delete">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeleteModal() {
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteModal();
+            }
+        });
+    </script>
+}

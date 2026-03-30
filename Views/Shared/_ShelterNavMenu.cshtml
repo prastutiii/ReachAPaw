@@ -4,16 +4,22 @@
     <div class="top-section">
         <img src="~/assets/logo2.png" class="logo">
         <ul class="nav-links">
-            <a href="/Shelter/ShelterDash">Dashboard</a>
-            <a href="/ShelterPets/ShelterPets">Pets</a>
-            <a href="/ShelterAdoptions/ShelterAdoptions">Adoptions</a>
-            <a href="/ShelterVisits/ShelterVisits">Visits</a>
-            <a href="#">Community</a>
-            <a href="#">Profile</a>
+            <a asp-controller="Shelter" asp-action="ShelterDash"
+               class="@(ViewData["Title"]?.ToString() == "ShelterDash" ? "active" : "")">Dashboard</a>
+            <a asp-controller="ShelterPets" asp-action="ShelterPets"
+               class="@(ViewData["Title"]?.ToString() == "ShelterPets" ? "active" : "")">Pets</a>
+            <a asp-controller="ShelterAdoptions" asp-action="ShelterAdoptions"
+               class="@(ViewData["Title"]?.ToString() == "ShelterAdoptions" ? "active" : "")">Adoptions</a>
+            <a asp-controller="ShelterVisits" asp-action="ShelterVisits"
+               class="@(ViewData["Title"]?.ToString() == "ShelterVisits" ? "active" : "")">Visits</a>
+            <a asp-controller="ShelterCommunity" asp-action="ShelterCommunity"
+               class="@(ViewData["Title"]?.ToString() == "ShelterCommunity" ? "active" : "")">Community</a>
+            <a asp-controller="ShelterProfile" asp-action="ShelterProfile"
+               class="@(ViewData["Title"]?.ToString() == "ShelterProfile" ? "active" : "")">Profile</a>
         </ul>
     </div>
 
     <div class="bottom-section">
-        <a href="#" class="logout">Logout</a>
+        <a asp-controller="Authentication" asp-action="Logout" class="logout">Logout</a>
     </div>
 </nav>

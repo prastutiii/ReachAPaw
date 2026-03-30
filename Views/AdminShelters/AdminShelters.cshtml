@@ -1,0 +1,63 @@
+﻿@using ReachAPaw.Models
+@model IEnumerable<ShelterModel>
+@{
+    ViewData["Title"] = "AdminShelters";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var filtered = filter == "all" ? Model : Model.Where(s => s.status?.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/admin/adminshelter.css" />
+
+<div class="shelters-wrapper">
+
+    <div class="greeting-card">
+        <h2>Hi, Super Admin!</h2>
+        <p>This is what's happening in our shelters lately.</p>
+    </div>
+
+    <div class="page-header">
+        <h4 class="section-title">Manage Shelters</h4>
+        <div class="header-actions">
+            <div class="tabs">
+                <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@Model.Count()</span></a>
+                <a href="?filter=Active" class="tab @(filter == "Active" ? "active" : "")">Active <span class="count">@Model.Count(s => s.status?.ToLower().Trim() == "active")</span></a>
+                <a href="?filter=Inactive" class="tab @(filter == "Inactive" ? "active" : "")">Inactive <span class="count">@Model.Count(s => s.status?.ToLower().Trim() == "inactive")</span></a>
+            </div>
+            <a asp-controller="AdminShelters" asp-action="AddShelter" class="btn-add">+ Add Shelter</a>
+        </div>
+    </div>
+
+    <div class="shelters-grid">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var shelter in filtered)
+            {
+                <div class="shelter-card">
+                    <div class="shelter-card-image">
+                        <img src="@(string.IsNullOrEmpty(shelter.shelter_img) ? "/images/placeholder.jpg" : shelter.shelter_img)"
+                             alt="@shelter.shelter_name" />
+                    </div>
+                    <div class="shelter-card-content">
+                        <h5>@shelter.shelter_name</h5>
+                        <p class="shelter-meta">@shelter.city</p>
+                        <p class="shelter-pets">@(shelter.Pets?.Count ?? 0) pets listed</p>
+                        <div class="shelter-card-footer">
+                            <span class="status-badge @shelter.status?.ToLower().Trim()">@shelter.status</span>
+                            <a asp-controller="AdminShelters" asp-action="ViewShelter"
+                               asp-route-id="@shelter.shelter_id"
+                               class="btn-view">View</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-data">No shelters found.</p>
+        }
+    </div>
+</div>

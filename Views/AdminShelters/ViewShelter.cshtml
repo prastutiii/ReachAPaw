@@ -1,0 +1,198 @@
+﻿@using ReachAPaw.Models
+@model ShelterModel
+@{
+    ViewData["Title"] = "View Shelter";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminshelter.css" />
+
+<div class="detail-wrapper">
+    <a href="@Url.Action("AdminShelters", "AdminShelters")" class="back-button">← Back to Shelters</a>
+
+    <div class="detail-header">
+        <h2 style="color: #3e2723; margin: 0; font-size: 1.6rem;">@Model.shelter_name</h2>
+        <div class="detail-actions">
+            <a href="@Url.Action("EditShelter", "AdminShelters", new { id = Model.shelter_id })" class="btn-secondary">✎ Edit</a>
+            <button type="button" class="btn-danger" onclick="showDeleteModal()">🗑 Delete</button>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        @if (!string.IsNullOrEmpty(Model.shelter_img))
+        {
+            <img src="@Model.shelter_img" alt="@Model.shelter_name" class="detail-image" />
+        }
+        else
+        {
+            <img src="/images/placeholder.jpg" alt="@Model.shelter_name" class="detail-image" />
+        }
+
+        <div class="detail-section">
+            <h4>Contact Information</h4>
+            <p>
+                <span class="label">Email:</span><br />
+                @if (!string.IsNullOrEmpty(Model.email))
+                {
+                    <a href="mailto:@Model.email" style="color: #5d4037; text-decoration: none;">@Model.email</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Phone:</span><br />
+                @if (!string.IsNullOrEmpty(Model.phone))
+                {
+                    <a href="tel:@Model.phone" style="color: #5d4037; text-decoration: none;">@Model.phone</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+            <p>
+                <span class="label">Website:</span><br />
+                @if (!string.IsNullOrEmpty(Model.website))
+                {
+                    <a href="@Model.website" target="_blank" style="color: #5d4037; text-decoration: none;">@Model.website</a>
+                }
+                else
+                {
+                    <span style="color: #999;">Not provided</span>
+                }
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Location & Details</h4>
+            <p>
+                <span class="label">Address:</span><br />
+                @(string.IsNullOrEmpty(Model.address) ? "Not provided" : Model.address)
+            </p>
+            <p>
+                <span class="label">City:</span><br />
+                @(string.IsNullOrEmpty(Model.city) ? "Not provided" : Model.city)
+            </p>
+            <p>
+                <span class="label">PAN Number:</span><br />
+                @(string.IsNullOrEmpty(Model.pan_number) ? "Not provided" : Model.pan_number)
+            </p>
+            <p>
+                <span class="label">Operating Hours:</span><br />
+                @(string.IsNullOrEmpty(Model.hours) ? "Not provided" : Model.hours)
+            </p>
+        </div>
+
+        <div class="detail-section">
+            <h4>Status & Description</h4>
+            <p>
+                <span class="label">Status:</span><br />
+                <span class="status-badge @(Model.status?.ToLower() ?? "")">@(Model.status ?? "N/A")</span>
+            </p>
+            <p>
+                <span class="label">Description:</span><br />
+                @(string.IsNullOrEmpty(Model.description) ? "Not provided" : Model.description)
+            </p>
+        </div>
+
+        <!-- Manager Information Section -->
+        @if (Model.Users != null)
+        {
+            <div class="detail-section">
+                <h4>Manager Account Information</h4>
+                <div class="manager-info">
+                    @if (!string.IsNullOrEmpty(Model.Users.image_url))
+                    {
+                        <img src="@Model.Users.image_url" alt="@Model.Users.username" class="manager-photo" />
+                    }
+                    <div class="manager-details">
+                        <p>
+                            <span class="label">Username:</span><br />
+                            @Model.Users.username
+                        </p>
+                        <p>
+                            <span class="label">Email:</span><br />
+                            @if (!string.IsNullOrEmpty(Model.Users.email))
+                            {
+                                <a href="mailto:@Model.Users.email" style="color: #5d4037; text-decoration: none;">@Model.Users.email</a>
+                            }
+                            else
+                            {
+                                <span style="color: #999;">Not provided</span>
+                            }
+                        </p>
+                        <p>
+                            <span class="label">Phone:</span><br />
+                            @if (!string.IsNullOrEmpty(Model.Users.phone))
+                            {
+                                <a href="tel:@Model.Users.phone" style="color: #5d4037; text-decoration: none;">@Model.Users.phone</a>
+                            }
+                            else
+                            {
+                                <span style="color: #999;">Not provided</span>
+                            }
+                        </p>
+                        <p>
+                            <span class="label">Address:</span><br />
+                            @(string.IsNullOrEmpty(Model.Users.address) ? "Not provided" : Model.Users.address)
+                        </p>
+                        <p>
+                            <span class="label">Status:</span><br />
+                            <span class="status-badge @(Model.Users.status?.ToLower() ?? "")">@(Model.Users.status ?? "N/A")</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.Pets != null && Model.Pets.Any())
+        {
+            <div class="pets-section">
+                <h4>Pets in this Shelter (@Model.Pets.Count)</h4>
+                <div class="pets-list-detail">
+                    @foreach (var pet in Model.Pets)
+                    {
+                        <div class="pet-item">
+                            <img src="@(string.IsNullOrEmpty(pet.image_url) ? "/images/placeholder.jpg" : pet.image_url)" alt="@pet.pet_name" />
+                            <p>@pet.pet_name</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>Delete Shelter</h3>
+        <p>Are you sure you want to delete this shelter? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn-cancel" onclick="hideDeleteModal()">Cancel</button>
+            <form method="post" asp-controller="AdminShelters" asp-action="DeleteShelter" asp-route-id="@Model.shelter_id" style="display: inline;">
+                <button type="submit" class="modal-btn-delete" onclick="return confirm('Are you absolutely sure?');">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeleteModal() {
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteModal();
+            }
+        });
+    </script>
+}

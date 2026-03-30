@@ -1,0 +1,95 @@
+@using ReachAPaw.Models
+@model IEnumerable<UserModel>
+@{
+    ViewData["Title"] = "AdminUsers";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminusers.css" />
+
+<div class="users-wrapper">
+
+    <div class="greeting-card">
+        <h2>Hi, Super Admin!</h2>
+        <p>This is what's happening in our platform lately.</p>
+    </div>
+
+    <div class="page-header">
+        <h4 class="section-title">Manage Users</h4>
+        <a asp-controller="AdminUsers" asp-action="AddUser" class="btn-add">+ Add User</a>
+    </div>
+
+    <div class="users-list">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var user in Model)
+            {
+                <div class="user-row">
+                    <div class="user-avatar">
+                        @if (!string.IsNullOrEmpty(user.image_url))
+                        {
+                            <img src="@user.image_url" alt="@user.username" />
+                        }
+                        else
+                        {
+                            <div class="user-initial">@user.username[0].ToString().ToUpper()</div>
+                        }
+                    </div>
+                    <div class="user-info">
+                        <h5>@user.username</h5>
+                        <p>@user.email</p>
+                    </div>
+                    <div class="user-role">
+                        @(user.role ?? "User")
+                    </div>
+                    <div class="user-status">
+                        <span class="status-badge @(user.status?.ToLower() ?? "")">@(user.status ?? "N/A")</span>
+                    </div>
+                    <div class="user-actions">
+                        <a href="@Url.Action("ViewUser", "AdminUsers", new { id = user.user_id })" class="action-btn view-btn" title="View">👁</a>
+                        <a href="@Url.Action("EditUser", "AdminUsers", new { id = user.user_id })" class="action-btn edit-btn" title="Edit">✎</a>
+                        <button type="button" class="action-btn delete-btn" onclick="showDeleteModal(@user.user_id, '@user.username')" title="Delete">🗑</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-data">No users found.</p>
+        }
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>Delete User</h3>
+        <p>Are you sure you want to delete user <strong><span id="deleteUsername"></span></strong>? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn-cancel" onclick="hideDeleteModal()">Cancel</button>
+            <form id="deleteForm" method="post" style="display: inline;">
+                <button type="submit" class="modal-btn-delete">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeleteModal(userId, username) {
+            document.getElementById('deleteUsername').textContent = username;
+            document.getElementById('deleteForm').action = '@Url.Action("DeleteUser", "AdminUsers")' + '?id=' + userId;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteModal();
+            }
+        });
+    </script>
+}

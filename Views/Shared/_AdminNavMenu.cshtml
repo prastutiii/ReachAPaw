@@ -1,0 +1,38 @@
+﻿<aside class="admin-sidebar">
+    <div class="sidebar-logo">
+        <img src="~/assets/logo2.png" alt="Reach.A.Paw" />
+    </div>
+
+    <nav class="sidebar-nav">
+        <a asp-controller="Admin" asp-action="AdminDash"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminDash" ? "active" : "")">
+            Dashboard
+        </a>
+        <a asp-controller="AdminPets" asp-action="AdminPets"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminPets" ? "active" : "")">
+            Pets
+        </a>
+        <a asp-controller="AdminShelters" asp-action="AdminShelters"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminShelters" ? "active" : "")">
+            Shelters
+        </a>
+        <a asp-controller="AdminUsers" asp-action="AdminUsers"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminUsers" ? "active" : "")">
+            Users
+        </a>
+        <a asp-controller="AdminAdoptions" asp-action="AdminAdoptions"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminAdoptions" ? "active" : "")">
+            Adoptions
+        </a>
+        <a asp-controller="AdminCommunity" asp-action="AdminCommunity"
+           class="nav-item @(ViewData["Title"]?.ToString() == "AdminCommunity" ? "active" : "")">
+            Community
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <a asp-controller="Authentication" asp-action="Logout" class="nav-item logout">
+            Logout
+        </a>
+    </div>
+</aside>

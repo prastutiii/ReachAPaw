@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "ShelterProfile";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+
+    var user = ViewBag.User as ReachAPaw.Models.UserModel;
+    var shelter = ViewBag.Shelter as ReachAPaw.Models.ShelterModel;
+}
+
+<link rel="stylesheet" href="~/css/shelter/shelterprofile.css" />
+
+<div class="profile-wrapper">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="success-banner">@TempData["Success"]</div>
+    }
+
+    <form asp-controller="ShelterProfile" asp-action="ShelterProfile" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+        @Html.AntiForgeryToken()
+
+        <div class="profile-header-card">
+            <div class="shelter-identity">
+                <div class="shelter-img-wrap" onclick="document.getElementById('shelter_img').click()">
+                    <img src="@(string.IsNullOrEmpty(shelter.shelter_img) ? "/images/placeholder.jpg" : shelter.shelter_img)"
+                         alt="@shelter.shelter_name" id="shelterImgPreview" />
+                    <div class="img-overlay">Change</div>
+                    <input type="file" name="shelter_img" id="shelter_img" hidden accept="image/*"
+                           onchange="previewImage(this)" />
+                </div>
+                <div>
+                    <h2>@shelter.shelter_name</h2>
+                    <p>@shelter.address, @shelter.city</p>
+                </div>
+            </div>
+            <button type="submit" class="btn-save">Save Changes</button>
+        </div>
+
+        <div class="profile-section basic">
+            <h4>Basic Information</h4>
+            <div class="two-col">
+                <div class="field-group">
+                    <label>Shelter Name</label>
+                    <input type="text" name="shelter_name" value="@shelter.shelter_name" />
+                </div>
+                <div class="field-group">
+                    <label>PAN Number</label>
+                    <input type="text" name="pan_number" value="@shelter.pan_number" />
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Description</label>
+                <textarea name="description" rows="4">@shelter.description</textarea>
+            </div>
+        </div>
+
+        <div class="profile-section contact">
+            <h4>Contact Information</h4>
+            <div class="two-col">
+                <div class="field-group">
+                    <label>Display Email</label>
+                    <input type="email" name="display_email" value="@shelter.email" />
+                </div>
+                <div class="field-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" value="@shelter.phone" />
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="field-group">
+                    <label>Website</label>
+                    <input type="text" name="website" value="@shelter.website" />
+                </div>
+                <div class="field-group">
+                    <label>Operating Hours</label>
+                    <input type="text" name="hours" value="@shelter.hours" />
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section address">
+            <h4>Address</h4>
+            <div class="field-group">
+                <label>Location</label>
+                <input type="text" name="address" value="@shelter.address" />
+            </div>
+            <div class="two-col">
+                <div class="field-group">
+                    <label>City</label>
+                    <input type="text" name="city" value="@shelter.city" />
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section account">
+            <h4>Account Information</h4>
+            <div class="two-col">
+                <div class="field-group">
+                    <label>Username</label>
+                    <input type="text" name="username" value="@user.username" />
+                </div>
+                <div class="field-group">
+                    <label>Login Email</label>
+                    <input type="email" name="login_email" value="@user.email" />
+                </div>
+            </div>
+            <div class="field-group">
+                <label>New Password <span class="optional">(leave blank to keep current)</span></label>
+                <input type="password" name="password" placeholder="Enter new password" />
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('shelterImgPreview').src = e.target.result;
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

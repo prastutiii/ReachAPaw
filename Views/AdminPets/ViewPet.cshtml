@@ -1,0 +1,53 @@
+﻿@model ReachAPaw.Models.PetModel
+@{
+    ViewData["Title"] = "AdminPets";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminpets.css" />
+
+<div class="page-wrapper">
+    <a asp-action="AdminPets" class="back-link">← Back to Pets</a>
+
+    <div class="detail-header">
+        <img src="@(string.IsNullOrEmpty(Model.image_url) ? "/images/placeholder.jpg" : Model.image_url)"
+             alt="@Model.pet_name" class="detail-img" />
+        <div class="detail-header-info">
+            <h2>@Model.pet_name</h2>
+            <p>@Model.species • @Model.gender • @Model.age old • @Model.location</p>
+            <span class="status-badge @Model.status?.ToLower().Trim()">@Model.status</span>
+        </div>
+        <div class="detail-fee">
+            <small>Adoption Fee</small>
+            <strong>Rs. @Model.fee</strong>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-card">
+            <h4>About</h4>
+            <p>@Model.description</p>
+        </div>
+
+        <div class="detail-card">
+            <h4>Health</h4>
+            <div class="info-row"><span class="info-label">Vaccinated</span><span>@(Model.is_vaccinated ? "Yes" : "No")</span></div>
+            <div class="info-row"><span class="info-label">Neutered</span><span>@(Model.is_neutered ? "Yes" : "No")</span></div>
+            <div class="info-row"><span class="info-label">Microchipped</span><span>@(Model.is_microchipped ? "Yes" : "No")</span></div>
+            <div class="info-row"><span class="info-label">Health Status</span><span>@Model.health_status</span></div>
+        </div>
+
+        <div class="detail-card">
+            <h4>Ideal Home</h4>
+            <p>@Model.ideal_home</p>
+        </div>
+
+        <div class="detail-card">
+            <h4>Shelter Info</h4>
+            <div class="info-row"><span class="info-label">Shelter</span><span>@Model.Shelters?.shelter_name</span></div>
+            <div class="info-row"><span class="info-label">Address</span><span>@Model.Shelters?.address</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span>@Model.Shelters?.phone</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span>@Model.Shelters?.email</span></div>
+        </div>
+    </div>
+</div>

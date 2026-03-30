@@ -1,0 +1,115 @@
+@using ReachAPaw.Models
+@model UserModel
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin/adminusers.css" />
+
+<div class="form-wrapper">
+    <a href="@Url.Action("AdminUsers", "AdminUsers")" class="back-button">← Back to Users</a>
+
+    <div class="form-card">
+        <h2 style="color: #3e2723; margin: 0 0 24px; font-size: 1.4rem;">Edit User</h2>
+
+        <form asp-controller="AdminUsers" asp-action="EditUser" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="@Model.user_id" />
+            @Html.AntiForgeryToken()
+
+            <div class="form-section-title">User Information</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username *</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" value="@Model.username" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password (leave blank to keep current)</label>
+                    <input type="password" id="password" name="password" placeholder="Enter new password or leave blank" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="user@example.com" value="@Model.email" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" value="@Model.phone" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="Street address" value="@Model.address" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" class="form-control" value="@Model.role" readonly />
+
+                    <input type="hidden" name="role" value="@Model.role" />
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="active" selected>Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>User Photo</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="userImage" name="userImage" accept="image/*" />
+                    <label for="userImage">Choose Photo</label>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.image_url))
+            {
+                <div style="margin-bottom: 16px;">
+                    <p style="color: #a1887f; font-size: 0.8rem; margin: 0 0 8px; font-weight: 600;">Current Photo:</p>
+                    <img src="@Model.image_url" alt="Current" class="preview-image" style="max-height: 150px;" />
+                </div>
+            }
+            else
+            {
+                <div style="margin-bottom: 16px;">
+                    <p style="color: #a1887f; font-size: 0.8rem; margin: 0 0 8px; font-weight: 600;">Current Photo:</p>
+                    <div class="preview-initial">@Model.username[0].ToString().ToUpper()</div>
+                </div>
+            }
+
+            <div id="imagePreview"></div>
+
+            <div class="form-actions">
+                <a href="@Url.Action("AdminUsers", "AdminUsers")" class="btn-secondary">Cancel</a>
+                <button type="submit" class="btn-primary">Update User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('userImage')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.innerHTML = `<img src="${event.target.result}" alt="Preview" class="preview-image" style="margin-top: 12px;" />`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

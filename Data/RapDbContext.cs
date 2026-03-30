@@ -19,6 +19,9 @@ namespace ReachAPaw.Data
         public DbSet<FavoriteModel> Favorites { get; set; }
         public DbSet<NotificationModel> Notifications { get; set; }
         public DbSet<VisitModel> Visits { get; set; }
+        public DbSet<CommunityModel> Community { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

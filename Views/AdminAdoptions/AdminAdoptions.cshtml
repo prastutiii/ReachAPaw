@@ -1,0 +1,66 @@
+@using ReachAPaw.Models
+@model IEnumerable<AdoptionApplicationModel>
+@{
+    ViewData["Title"] = "AdminAdoptions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var filter = Context.Request.Query["filter"].ToString();
+    if (string.IsNullOrEmpty(filter)) filter = "all";
+
+    var filtered = filter == "all" ? Model : Model.Where(a => a.status.ToLower().Trim() == filter.ToLower().Trim());
+}
+
+<link rel="stylesheet" href="~/css/admin/adminadoptions.css" />
+
+<div class="adoptions-wrapper">
+
+    <div class="greeting-card">
+        <h2>Hi, Super Admin!</h2>
+        <p>This is what's happening in our platform lately.</p>
+    </div>
+
+    <div class="page-header">
+        <h4 class="section-title">Manage Adoptions</h4>
+        <div class="tabs">
+            <a href="?filter=all" class="tab @(filter == "all" ? "active" : "")">All <span class="count">@Model.Count()</span></a>
+            <a href="?filter=Pending" class="tab @(filter == "Pending" ? "active" : "")">Pending <span class="count">@Model.Count(a => a.status.ToLower().Trim() == "pending")</span></a>
+            <a href="?filter=Approved" class="tab @(filter == "Approved" ? "active" : "")">Approved <span class="count">@Model.Count(a => a.status.ToLower().Trim() == "approved")</span></a>
+            <a href="?filter=Completed" class="tab @(filter == "Completed" ? "active" : "")">Completed <span class="count">@Model.Count(a => a.status.ToLower().Trim() == "completed")</span></a>
+            <a href="?filter=Adopted" class="tab @(filter == "Adopted" ? "active" : "")">Adopted <span class="count">@Model.Count(a => a.status.ToLower().Trim() == "adopted")</span></a>
+            <a href="?filter=Rejected" class="tab @(filter == "Rejected" ? "active" : "")">Rejected <span class="count">@Model.Count(a => a.status.ToLower().Trim() == "rejected")</span></a>
+        </div>
+    </div>
+
+    <div class="adoptions-list">
+        @if (filtered != null && filtered.Any())
+        {
+            @foreach (var adoption in filtered)
+            {
+                <div class="adoption-row">
+                    <img src="@(string.IsNullOrEmpty(adoption.Pets?.image_url) ? "/images/placeholder.jpg" : adoption.Pets.image_url)"
+                         alt="@adoption.Pets?.pet_name" class="adoption-row-img" />
+                    <div class="adoption-row-info">
+                        <h5>@adoption.Pets?.pet_name</h5>
+                        <p class="adoption-meta">
+                            <span class="applicant">@adoption.Users?.username</span>
+                            •
+                            <span class="shelter">@adoption.Shelters?.shelter_name</span>
+                            •
+                            <span class="date">@adoption.applied_date.ToString("MMM dd, yyyy")</span>
+                        </p>
+                    </div>
+                    <div class="adoption-row-right">
+                        <span class="status-badge @adoption.status?.ToLower().Trim()">@adoption.status</span>
+                        <a asp-controller="AdminAdoptions" asp-action="ViewAdoptions"
+                           asp-route-id="@adoption.application_id"
+                           class="btn-view">View</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-data">No adoptions found.</p>
+        }
+    </div>
+</div>
