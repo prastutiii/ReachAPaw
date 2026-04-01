@@ -51,82 +51,57 @@ namespace ReachAPaw.Controllers.Admin
         // POST: Add Shelter
         [HttpPost]
         public IActionResult AddShelter(
-            string shelter_name,
-            string email,
-            string phone,
-            string address,
-            string city,
-            string pan_number,
-            string website,
-            string hours,
-            string description,
-            string status,
-            IFormFile shelterImage,
-            string username,
-            string password,
-            string userEmail,
-            string userPhone,
-            string userAddress,
-            IFormFile userImage)
+    string shelter_name,
+    string email,
+    string phone,
+    string address,
+    string city,
+    string pan_number,
+    string website,
+    string hours,
+    string description,
+    string status,
+    IFormFile shelterImage,
+    string username,
+    string password,
+    string userEmail,
+    string userPhone,
+    string userAddress,
+    IFormFile userImage)
         {
-            Debug.WriteLine($"=== AddShelter POST called ===");
-            Debug.WriteLine($"Shelter Name: {shelter_name}");
-            Debug.WriteLine($"Username: {username}");
-            Debug.WriteLine($"Password: {password}");
-
             try
             {
-                // Handle shelter image upload
                 string shelterFileName = null;
                 if (shelterImage != null && shelterImage.Length > 0)
                 {
-                    string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/shelters");
-                    Debug.WriteLine("Uploads folder: " + uploads);
-                    Directory.CreateDirectory(uploads);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/shelters");
+                    Directory.CreateDirectory(path);
 
-                    shelterFileName = Guid.NewGuid().ToString() + Path.GetExtension(shelterImage.FileName);
-
-                    try
+                    string fileName = Guid.NewGuid() + Path.GetExtension(shelterImage.FileName);
+                    using (var stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
                     {
-                        using (var stream = new FileStream(Path.Combine(uploads, shelterFileName), FileMode.Create))
-                        {
-                            shelterImage.CopyTo(stream);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Exception while saving shelter image: " + ex.Message);
+                        shelterImage.CopyTo(stream);
                     }
 
-                    shelterFileName = "/images/shelters/" + shelterFileName;
+                    shelterFileName = "/images/shelters/" + fileName;
                 }
 
-                // Create user first
-                int userId = 0;
                 string userFileName = null;
                 if (userImage != null && userImage.Length > 0)
                 {
-                    string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
-                    Debug.WriteLine("User Uploads folder: " + uploads);
-                    Directory.CreateDirectory(uploads);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
+                    Directory.CreateDirectory(path);
 
-                    userFileName = Guid.NewGuid().ToString() + Path.GetExtension(userImage.FileName);
-
-                    try
+                    string fileName = Guid.NewGuid() + Path.GetExtension(userImage.FileName);
+                    using (var stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
                     {
-                        using (var stream = new FileStream(Path.Combine(uploads, userFileName), FileMode.Create))
-                        {
-                            userImage.CopyTo(stream);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Exception while saving user image: " + ex.Message);
+                        userImage.CopyTo(stream);
                     }
 
-                    userFileName = "/images/users/" + userFileName;
+                    userFileName = "/images/users/" + fileName;
                 }
 
+                //Create User
                 var user = new UserModel
                 {
                     username = username,
@@ -139,13 +114,10 @@ namespace ReachAPaw.Controllers.Admin
                     status = "active"
                 };
 
-                Debug.WriteLine($"Adding user: {user.username}");
                 _context.Users.Add(user);
-                _context.SaveChanges();
-                userId = user.user_id;
-                Debug.WriteLine($"User created with ID: {userId}");
+                _context.SaveChanges(); 
 
-                // Create shelter
+                //Create Shelter
                 var shelter = new ShelterModel
                 {
                     shelter_name = shelter_name,
@@ -159,21 +131,17 @@ namespace ReachAPaw.Controllers.Admin
                     description = description,
                     status = string.IsNullOrEmpty(status) ? "active" : status,
                     shelter_img = shelterFileName,
-                    user_id = userId,
-                    Users = user
+                    user_id = user.user_id 
                 };
 
-                Debug.WriteLine($"Adding shelter: {shelter.shelter_name}");
                 _context.Shelters.Add(shelter);
-                _context.SaveChanges();
-                Debug.WriteLine($"Shelter created successfully with ID: {shelter.shelter_id}");
+                _context.SaveChanges(); 
 
                 return RedirectToAction(nameof(AdminShelters));
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-                ModelState.AddModelError("", "Error adding shelter: " + ex.Message);
+                ModelState.AddModelError("", ex.InnerException?.Message ?? ex.Message);
                 return View();
             }
         }
