@@ -21,6 +21,8 @@ namespace ReachAPaw.Data
         public DbSet<VisitModel> Visits { get; set; }
         public DbSet<CommunityModel> Community { get; set; }
         public DbSet<CategoryModel> Categories { get; set; }
+        public DbSet<LikesModel> Likes { get; set; }
+        public DbSet<CommentsModel> Comments { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

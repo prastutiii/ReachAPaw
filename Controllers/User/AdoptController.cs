@@ -5,6 +5,7 @@ using ReachAPaw.Models;
 
 namespace ReachAPaw.Controllers
 {
+
     public class AdoptController : Controller
     {
         private readonly RapDbContext _context;
@@ -16,14 +17,24 @@ namespace ReachAPaw.Controllers
         }
 
         // GET: /Pet/Adopt
-        public async Task<IActionResult> Adopt()
+        public async Task<IActionResult> Adopt(string search)
         {
-            // Fetch the list of pets from the database
-            var pets = _context.Pets
-                   .Where(p => p.status.ToLower().Trim() == "available")
-                   .ToList();
+            var petsQuery = _context.Pets
+                .Where(p => p.status.ToLower().Trim() == "available");
 
-            // Pass the list (IEnumerable) to the View
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                petsQuery = petsQuery.Where(p =>
+                    p.pet_name.ToLower().Contains(search) ||
+                    (p.species != null && p.species.ToLower().Contains(search)) ||
+                    (p.location != null && p.location.ToLower().Contains(search)) ||
+                    (p.gender != null && p.gender.ToLower().Contains(search)) ||
+                    (p.age != null && p.age.ToLower().Contains(search))
+                );
+            }
+
+            var pets = await petsQuery.ToListAsync();
             return View(pets);
         }
     }

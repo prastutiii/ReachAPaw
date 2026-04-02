@@ -33,8 +33,8 @@ body {
 }
 
     .sidebar-logo img {
-        width: 40px;
-        height: 40px;
+        width: 150px;
+        height: 60px;
         object-fit: contain;
     }
 

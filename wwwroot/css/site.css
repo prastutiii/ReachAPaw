@@ -322,3 +322,44 @@ body {
     font-size: 0.83rem;
     padding: 24px;
 }
+
+.cta-section {
+    text-align: center;
+    padding-bottom: 60px;
+}
+
+.cta-title {
+    font-size: 2rem;
+    color: #f49471;
+    margin-bottom: 10px;
+}
+
+.cta-description {
+    max-width: 600px;
+    margin: 0 auto 25px;
+    line-height: 1.5;
+    color: #f6e1da;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-link {
+    border: 2px solid #f49471;
+    color: #f49471;
+    background-color: #f9f4e8;
+    padding: 10px 26px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+    .btn-link:hover {
+        border: 2px solid #e29b82;
+        color: #e29b82;
+        background-color: #f6e1da;
+    }

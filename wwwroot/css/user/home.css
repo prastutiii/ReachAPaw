@@ -208,6 +208,12 @@ section {
     display: inline-block;
 }
 
+    .primary-pill:hover {
+        border: 2px solid var(--brown);
+        color: var(--brown);
+        background: transparent;
+    }
+
 .ghost-pill {
     border: 2px solid var(--brown);
     color: var(--brown);
@@ -217,6 +223,13 @@ section {
     font-weight: bold;
     display: inline-block;
 }
+
+    .ghost-pill:hover {
+        background-color: var(--brown);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
 
 .solid-white-btn {
     background: white;
@@ -241,4 +254,9 @@ section {
 .center-btn {
     text-align: center;
     margin-top: 40px;
+}
+
+.events {
+    text-align: center;
+    justify-content: center;
 }

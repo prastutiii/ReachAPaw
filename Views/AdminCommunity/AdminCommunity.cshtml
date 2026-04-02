@@ -1,14 +1,17 @@
 @using ReachAPaw.Models
 @model IEnumerable<CommunityModel>
 @{
-    ViewData["Title"] = "Admin Community";
+    ViewData["Title"] = "AdminCommunity";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var categories = ViewBag.Categories as List<CategoryModel>;
 }
 
 <link rel="stylesheet" href="~/css/admin/admincommunity.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+@Html.AntiForgeryToken()
 
 <div class="community-wrapper">
-
     <div class="greeting-card">
         <h2>Hi, Super Admin!</h2>
         <p>This is what's happening in our Reach.A.Paw community lately.</p>
@@ -24,7 +27,7 @@
         {
             @foreach (var post in Model)
             {
-                <div class="post-row">
+                <div class="post-row" data-post-id="@post.community_id">
                     <div class="post-avatar">
                         @if (!string.IsNullOrEmpty(post.Users?.image_url))
                         {
@@ -35,16 +38,24 @@
                             <div class="user-initial">@post.Users?.username?[0].ToString().ToUpper()</div>
                         }
                     </div>
-                    <div class="post-info">
+                    <div class="post-info" onclick="showViewPostModal(@post.community_id)" style="cursor:pointer;">
                         <h5>@post.title</h5>
                         <p class="post-meta">
                             <span class="author">@((post.Users?.username) ?? "Unknown")</span>
                             •
                             <span class="date">@post.created_at.ToString("MMM dd, yyyy")</span>
                         </p>
+                        <p class="post-content">@post.post_content</p>
                     </div>
-                    <div class="post-actions">
-                        <button type="button" class="action-btn view-btn" onclick="showViewPostModal(@post.community_id)" title="View">👁</button>
+                    <div class="post-actions" onclick="event.stopPropagation()">
+                        <button type="button" class="action-btn like-btn" onclick="toggleLike(@post.community_id, this)" title="Like">
+                            <i class="bi bi-heart"></i>
+                            <span class="like-count">0</span>
+                        </button>
+                        <button type="button" class="action-btn comment-btn" onclick="showCommentModal(@post.community_id)" title="Comment">
+                            <i class="bi bi-chat"></i>
+                            <span class="comment-count">0</span>
+                        </button>
                         <button type="button" class="action-btn delete-btn" onclick="showDeleteModal(@post.community_id, '@post.title')" title="Delete">🗑</button>
                     </div>
                 </div>
@@ -58,141 +69,344 @@
 </div>
 
 <!-- View Post Modal -->
-<div class="modal-overlay" id="viewPostModal">
-    <div class="modal">
-        <button class="modal-close" onclick="hideViewPostModal()">&times;</button>
-        <div id="viewPostContent"></div>
-    </div>
+<div class="modal-overlay" id="viewPostModal" onclick="hideViewPostModal()"></div>
+<div class="view-post-modal" id="viewPostModalContent">
+    <button class="modal-close" onclick="hideViewPostModal()">&times;</button>
+    <div id="viewPostContent"></div>
 </div>
 
-<!-- Add Post Modal -->
-<div class="modal-overlay" id="addPostModal">
-    <div class="modal">
-        <button class="modal-close" onclick="hideAddPostModal()">&times;</button>
-        <h3>Add New Post</h3>
-        <form method="post" asp-controller="AdminCommunity" asp-action="AddPost">
-            @Html.AntiForgeryToken()
-            <div class="form-group">
-                <label for="title">Title *</label>
-                <input type="text" id="title" name="title" placeholder="Post title" required />
-            </div>
-            <div class="form-group">
-                <label for="category_id">Category *</label>
-                <select id="category_id" name="category_id" required>
-                    <option value="">Select Category</option>
-                    @{
-                        var categories = ViewBag.Categories as List<CategoryModel>;
-                        if (categories != null)
-                        {
-                            @foreach (var category in categories)
-                            {
-                                <option value="@category.category_id">@category.category_name</option>
-                            }
-                        }
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="post_content">Content *</label>
-                <textarea id="post_content" name="post_content" placeholder="Write your post..." required></textarea>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="modal-btn-cancel" onclick="hideAddPostModal()">Cancel</button>
-                <button type="submit" class="modal-btn-submit">Post</button>
-            </div>
-        </form>
+<!-- Comment Modal -->
+<div class="modal-overlay" id="commentModal" onclick="hideCommentModal()"></div>
+<div class="comment-modal" id="commentModalContent">
+    <div class="modal-header">
+        <h4>Comments</h4>
+        <button class="modal-close" onclick="hideCommentModal()">&times;</button>
     </div>
-</div>
-
-<!-- Delete Post Modal -->
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal">
-        <h3>Delete Post</h3>
-        <p>Are you sure you want to delete the post <strong><span id="deletePostTitle"></span></strong>? This action cannot be undone.</p>
-        <div class="modal-actions">
-            <button type="button" class="modal-btn-cancel" onclick="hideDeleteModal()">Cancel</button>
-            <form id="deleteForm" method="post" style="display: inline;">
-                <button type="submit" class="modal-btn-delete">Delete</button>
-            </form>
+    <div class="modal-body">
+        <div class="comments-section" id="commentsList"></div>
+        <div class="comment-input-section">
+            <textarea id="commentInput" placeholder="Write a comment..." rows="2"></textarea>
+            <button class="comment-submit" onclick="submitComment()">Post Comment</button>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        // View Post Modal
-        function showViewPostModal(postId) {
-            fetch(`/AdminCommunity/GetPostData?id=${postId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const content = `
-                        <div class="post-detail">
-                            <div class="post-header">
-                                <div class="post-avatar-detail">
-                                    ${data.users?.image_url ? 
-                                        `<img src="${data.users.image_url}" alt="${data.users.username}" />` :
-                                        `<div class="user-initial">${data.users?.username?.charAt(0).toUpperCase() || 'U'}</div>`
-                                    }
-                                </div>
-                                <div>
-                                    <h4>${data.users?.username || 'Unknown'}</h4>
-                                    <p class="date">${new Date(data.created_at).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</p>
-                                </div>
-                            </div>
-                            <div class="post-content-detail">
-                                <h3>${data.title}</h3>
-                                <p>${data.post_content || data.content}</p>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('viewPostContent').innerHTML = content;
-                    document.getElementById('viewPostModal').classList.add('show');
-                })
-                .catch(error => {
-                    console.error('Error fetching post:', error);
-                    alert('Error loading post. Please try again.');
-                });
-        }
-
-        function hideViewPostModal() {
-            document.getElementById('viewPostModal').classList.remove('show');
-        }
-
-        // Add Post Modal
-        function showAddPostModal() {
-            document.getElementById('addPostModal').classList.add('show');
-        }
-
-        function hideAddPostModal() {
-            document.getElementById('addPostModal').classList.remove('show');
-            document.getElementById('title').value = '';
-            document.getElementById('category_id').value = '';
-            document.getElementById('post_content').value = '';
-        }
-
-        // Delete Post Modal
-        function showDeleteModal(postId, postTitle) {
-            document.getElementById('deletePostTitle').textContent = postTitle;
-            document.getElementById('deleteForm').action = '@Url.Action("DeletePost", "AdminCommunity")' + '?id=' + postId;
-            document.getElementById('deleteModal').classList.add('show');
-        }
-
-        function hideDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('show');
-        }
-
-        // Close modals on overlay click
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('show');
+<!-- Add Post Modal -->
+<div class="modal-overlay" id="addPostModal" onclick="hideAddPostModal()"></div>
+<div class="add-post-modal" id="addPostModalContent">
+    <button class="modal-close" onclick="hideAddPostModal()">&times;</button>
+    <h3>Add New Post</h3>
+    <form method="post" asp-controller="AdminCommunity" asp-action="AddPost">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" placeholder="Post title" required />
+        </div>
+        <div class="form-group">
+            <label for="category_id">Category *</label>
+            <select id="category_id" name="category_id" required>
+                <option value="">Select Category</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.category_id">@cat.category_name</option>
                 }
-            });
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="post_content">Content *</label>
+            <textarea id="post_content" name="post_content" placeholder="Write your post..." required rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Post Discussion</button>
+    </form>
+</div>
+
+<!-- Delete Post Modal -->
+<div class="modal-overlay" id="deleteModal" onclick="hideDeleteModal()"></div>
+<div class="delete-modal" id="deleteModalContent">
+    <h3>Delete Post</h3>
+    <p>Are you sure you want to delete the post <strong><span id="deletePostTitle"></span></strong>? This action cannot be undone.</p>
+    <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="hideDeleteModal()">Cancel</button>
+        <form id="deleteForm" method="post" style="display: inline;">
+            <button type="submit" class="btn-delete">Delete</button>
+        </form>
+    </div>
+</div>
+
+<!-- Likes Modal -->
+<div class="modal-overlay" id="likesModal" onclick="hideLikesModal()"></div>
+<div class="likes-modal" id="likesModalContent">
+    <button class="modal-close" onclick="hideLikesModal()">&times;</button>
+    <h3>People who liked this post</h3>
+    <div id="likesList" class="likes-list"></div>
+</div>
+
+<script>
+    let currentPostId = null;
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+    // ============ POST MODALS ============
+    function showAddPostModal() {
+        document.getElementById('addPostModal').style.display = 'block';
+        document.getElementById('addPostModalContent').style.display = 'block';
+    }
+
+    function hideAddPostModal() {
+        document.getElementById('addPostModal').style.display = 'none';
+        document.getElementById('addPostModalContent').style.display = 'none';
+    }
+
+    function showViewPostModal(postId) {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        const title = card.querySelector('h5').textContent;
+        const content = card.querySelector('.post-content').textContent;
+        const author = card.querySelector('.author').textContent;
+        const date = card.querySelector('.date').textContent;
+        const likeCount = card.querySelector('.like-count').textContent;
+        const commentCount = card.querySelector('.comment-count').textContent;
+        const likeBtn = card.querySelector('.like-btn');
+        const isLiked = likeBtn.classList.contains('liked');
+
+        document.getElementById('viewPostContent').innerHTML = `
+            <div class="post-detail">
+                <h2>${title}</h2>
+                <div class="post-meta-detail">
+                    <span>${author}</span> • <span>${date}</span>
+                </div>
+                <p class="post-body-detail">${content}</p>
+                <div class="post-actions-detail">
+                    <button class="action-detail like-action ${isLiked ? 'liked' : ''}" onclick="toggleLike(${postId}, this); updateViewModal(${postId})">
+                        <i class="bi bi-heart"></i> <span>${likeCount}</span>
+                    </button>
+                    <button class="action-detail" onclick="showLikesModal(${postId})">
+                        👥 View Likes
+                    </button>
+                    <button class="action-detail" onclick="hideViewPostModal(); showCommentModal(${postId})">
+                        <i class="bi bi-chat"></i> <span>${commentCount}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewPostModal').style.display = 'block';
+        document.getElementById('viewPostModalContent').style.display = 'block';
+    }
+
+    function hideViewPostModal() {
+        document.getElementById('viewPostModal').style.display = 'none';
+        document.getElementById('viewPostModalContent').style.display = 'none';
+    }
+
+    function updateViewModal(postId) {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        const likeCount = card.querySelector('.like-count').textContent;
+        const likeBtn = document.querySelector('.post-detail .like-action');
+        if (likeBtn) {
+            likeBtn.querySelector('span').textContent = likeCount;
+        }
+    }
+
+    // ============ LIKES ============
+    function toggleLike(postId, btn) {
+        fetch('/AdminCommunity/ToggleLike', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `community_id=${postId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const card = document.querySelector(`[data-post-id="${postId}"]`);
+                const likeBtn = card.querySelector('.like-btn');
+                const likeCount = card.querySelector('.like-count');
+
+                likeCount.textContent = data.totalLikes;
+
+                if (data.liked) {
+                    likeBtn.classList.add('liked');
+                } else {
+                    likeBtn.classList.remove('liked');
+                }
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function loadPostLikes(postId) {
+        fetch(`/AdminCommunity/IsPostLiked?community_id=${postId}`)
+        .then(res => res.json())
+        .then(data => {
+            const card = document.querySelector(`[data-post-id="${postId}"]`);
+            if (card) {
+                const likeBtn = card.querySelector('.like-btn');
+                const likeCount = card.querySelector('.like-count');
+
+                likeCount.textContent = data.totalLikes;
+                if (data.liked) {
+                    likeBtn.classList.add('liked');
+                }
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function showLikesModal(postId) {
+        fetch(`/AdminCommunity/GetPostLikes?community_id=${postId}`)
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('likesList');
+            
+            if (data.success && data.likedBy && data.likedBy.length > 0) {
+                container.innerHTML = data.likedBy.map(user => `
+                    <div class="like-item">
+                        <div class="like-avatar">
+                            ${user.image_url ? 
+                                `<img src="${user.image_url}" alt="${user.username}" />` :
+                                `<div class="avatar-initial">${user.username[0].toUpperCase()}</div>`
+                            }
+                        </div>
+                        <span class="like-username">${user.username}</span>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="no-likes">No likes yet</p>';
+            }
+
+            document.getElementById('likesModal').style.display = 'block';
+            document.getElementById('likesModalContent').style.display = 'block';
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function hideLikesModal() {
+        document.getElementById('likesModal').style.display = 'none';
+        document.getElementById('likesModalContent').style.display = 'none';
+    }
+
+    // ============ COMMENTS ============
+    function showCommentModal(postId) {
+        currentPostId = postId;
+        document.getElementById('commentModal').style.display = 'block';
+        document.getElementById('commentModalContent').style.display = 'block';
+        document.getElementById('commentInput').value = '';
+        loadComments(postId);
+    }
+
+    function hideCommentModal() {
+        document.getElementById('commentModal').style.display = 'none';
+        document.getElementById('commentModalContent').style.display = 'none';
+        currentPostId = null;
+    }
+
+    function loadComments(postId) {
+        fetch(`/AdminCommunity/GetComments?community_id=${postId}`)
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('commentsList');
+
+            if (data.success && data.comments && data.comments.length > 0) {
+                container.innerHTML = data.comments.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <strong>${comment.username}</strong>
+                            <span class="comment-date">${comment.date}</span>
+                        </div>
+                        <p class="comment-text">${comment.text}</p>
+                        <button class="comment-delete" onclick="deleteComment(${comment.comment_id})">Delete</button>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>';
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function submitComment() {
+        const comment = document.getElementById('commentInput').value.trim();
+
+        if (!comment) {
+            alert('Please write a comment');
+            return;
+        }
+
+        if (!currentPostId) {
+            alert('Post ID is missing');
+            return;
+        }
+
+        fetch('/AdminCommunity/AddComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `community_id=${currentPostId}&comment=${encodeURIComponent(comment)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('commentInput').value = '';
+
+                // Update comment count
+                const card = document.querySelector(`[data-post-id="${currentPostId}"]`);
+                const commentCount = card.querySelector('.comment-count');
+                commentCount.textContent = data.totalComments;
+
+                loadComments(currentPostId);
+            } else {
+                alert(data.message || 'Error adding comment');
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('Error adding comment');
         });
-    </script>
-}
+    }
+
+    function deleteComment(commentId) {
+        if (!confirm('Delete this comment?')) return;
+
+        fetch('/AdminCommunity/DeleteComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `comment_id=${commentId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadComments(currentPostId);
+            } else {
+                alert(data.message || 'Error deleting comment');
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    // ============ DELETE POST ============
+    function showDeleteModal(postId, postTitle) {
+        document.getElementById('deletePostTitle').textContent = postTitle;
+        document.getElementById('deleteForm').action = '/AdminCommunity/DeletePost?id=' + postId;
+        document.getElementById('deleteModal').style.display = 'block';
+        document.getElementById('deleteModalContent').style.display = 'block';
+    }
+
+    function hideDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        document.getElementById('deleteModalContent').style.display = 'none';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-post-id]').forEach(card => {
+            const postId = card.dataset.postId;
+            loadPostLikes(postId);
+        });
+    });
+</script>

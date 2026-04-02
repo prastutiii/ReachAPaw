@@ -1,5 +1,17 @@
 ﻿<footer class="main-footer">
+    <section class="cta-section">
+        <h2 class="cta-title">Ready To Change A Life?</h2>
+        <p class="cta-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <div class="cta-buttons">
+            <a href="#" class="btn-link">Adopt A Pet</a>
+            <a href="#" class="btn-link">Join Community</a>
+        </div>
+    </section>
     <div class="footer-grid">
+
         <div class="footer-brand">
             <h3>Reach.A.Paw</h3>
             <p>Connecting paws with loving hearts since 2025. Every pet deserves a second chance.</p>
@@ -8,9 +20,9 @@
         <div class="footer-links">
             <h4>Quick Links</h4>
             <nav>
-                <a asp-controller="Adoption" asp-action="Index">Adopt a Pet</a>
-                <a asp-controller="Home" asp-action="Process">How to Adopt</a>
-                <a asp-controller="Community" asp-action="Events">Community</a>
+                <a asp-controller="Adopt" asp-action="Adopt">Adopt a Pet</a>
+                <a asp-controller="Home" asp-action="Home">How to Adopt</a>
+                <a asp-controller="Community" asp-action="Community">Community</a>
             </nav>
         </div>
 
@@ -19,7 +31,7 @@
             <nav>
                 <a asp-controller="Home" asp-action="About">About Us</a>
                 <a asp-controller="Home" asp-action="Faq">FAQs</a>
-                <a asp-controller="Shelters" asp-action="Partners">Partner Shelters</a>
+                <a asp-controller="UserShelters" asp-action="UserShelters">Partner Shelters</a>
             </nav>
         </div>
 

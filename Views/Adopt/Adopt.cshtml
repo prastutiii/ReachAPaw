@@ -11,9 +11,14 @@
         <h1>Find Your <span class="highlight">Pawfect Companion.</span></h1> <i class="fas fa-paw"></i></h1>
         <p>Browse our gallery of furry friends waiting for their forever homes. Every adoption saves a life.</p>
         
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search pets by name or breed..." />
-        </div>
+        <form method="get" asp-controller="Adopt" asp-action="Adopt">
+            <div class="search-container">
+                <input type="text" name="search" class="search-input"
+                       placeholder="Search pets by name, breed, location..."
+                       value="@Context.Request.Query["search"]" />
+                <button type="submit" class="search-btn">Search</button>
+            </div>
+        </form>
     </div>
 </section>
 

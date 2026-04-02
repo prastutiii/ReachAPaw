@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "ShelterDash";
     Layout = "~/Views/Shared/_ShelterLayout.cshtml";
 }
@@ -17,3 +17,276 @@
     <div class="stat-box"><p>Pending Requests</p><h3>@ViewBag.PendingRequests</h3></div>
     <div class="stat-box"><p>Total Revenue</p><h3>Rs. @ViewBag.TotalRevenue</h3></div>
 </section>
+
+<section class="charts-section">
+    <div class="charts-grid">
+        <!-- Daily Revenue Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h4>📊 Daily Revenue</h4>
+                <p>Revenue trend over the last 30 days</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="dailyRevenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pet Categories Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h4>🐾 Pet Categories</h4>
+                <p>Distribution of pets by species</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="petCategoriesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Adoption Status Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h4>🏠 Adoption Status</h4>
+                <p>Current status of adoption applications</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="adoptionStatusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Scheduled Visits Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h4>📅 Scheduled Visits</h4>
+                <p>Visit schedule over the last 30 days</p>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="scheduledVisitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script>
+        const colors = {
+            primary: '#6a4a9a',
+            secondary: '#8d6e63',
+            accent: '#d7ccc8',
+            success: '#4caf50',
+            warning: '#ff9800',
+            danger: '#f44336',
+            info: '#2196f3',
+            light: '#f5f5f5',
+            dark: '#3e2723'
+        };
+
+        // Updated color palette
+        const chartBgColors = ['#d6ecd4','#f5e6c0','#d6eef7','#f0f0f0'];
+        const chartBorderColors = ['#a1887f','#a1887f','#a1887f','#a1887f'];
+
+        function getStatusColor(status) {
+            const statusLower = status?.toLowerCase().trim();
+            switch(statusLower) {
+                case 'pending':
+                    return '#f5e6c0';
+                case 'approved':
+                case 'adopted':
+                    return '#d6ecd4';
+                case 'rejected':
+                case 'cancelled':
+                    return '#f0f0f0';
+                case 'completed':
+                    return '#d6eef7';
+                default:
+                    return '#f0f0f0';
+            }
+        }
+
+        // 1. Daily Revenue Chart
+        @if (ViewBag.DailyRevenueLabels?.Count > 0)
+        {
+                <text>
+            const dailyRevenueCtx = document.getElementById('dailyRevenueChart').getContext('2d');
+            new Chart(dailyRevenueCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DailyRevenueLabels)),
+                    datasets: [{
+                        label: 'Revenue (Rs)',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DailyRevenueData)),
+                        borderColor: '#6a4a9a',
+                        backgroundColor: '#ede8f5',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#6a4a9a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                            labels: { color: '#a1887f' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#a1887f',
+                                font: { size: 12, weight: 'bold' }
+                            },
+                            grid: {
+                                color: '#f5ede8'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#a1887f',
+                                font: { size: 12 }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+                </text>
+        }
+
+        // 2. Pet Categories Chart
+        @if (ViewBag.PetCategoryLabels?.Count > 0)
+        {
+                <text>
+            const petCategoriesCtx = document.getElementById('petCategoriesChart').getContext('2d');
+            new Chart(petCategoriesCtx, {
+                type: 'pie',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.PetCategoryLabels)),
+                    datasets: [{
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.PetCategoryData)),
+                        backgroundColor: chartBgColors,
+                        borderColor: chartBorderColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#a1887f',
+                                font: { size: 12, weight: '500' },
+                                padding: 15,
+                                boxWidth: 12
+                            }
+                        }
+                    }
+                }
+            });
+                </text>
+        }
+
+        // 3. Adoption Status Chart
+        @if (ViewBag.AdoptionStatusLabels?.Count > 0)
+        {
+                <text>
+            const adoptionStatusLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.AdoptionStatusLabels));
+            const adoptionStatusBgColors = adoptionStatusLabels.map(label => getStatusColor(label));
+
+            const adoptionStatusCtx = document.getElementById('adoptionStatusChart').getContext('2d');
+            new Chart(adoptionStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: adoptionStatusLabels,
+                    datasets: [{
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.AdoptionStatusData)),
+                        backgroundColor: adoptionStatusBgColors,
+                        borderColor: '#a1887f',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#a1887f',
+                                font: { size: 12, weight: '500' },
+                                padding: 15,
+                                boxWidth: 12
+                            }
+                        }
+                    }
+                }
+            });
+                </text>
+        }
+
+        // 4. Scheduled Visits Chart
+        @if (ViewBag.VisitLabels?.Count > 0)
+        {
+                <text>
+            const scheduledVisitsCtx = document.getElementById('scheduledVisitsChart').getContext('2d');
+            new Chart(scheduledVisitsCtx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.VisitLabels)),
+                    datasets: [{
+                        label: 'Number of Visits',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.VisitData)),
+                        backgroundColor: '#d6eef7',
+                        borderColor: '#3a6b7c',
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                            labels: { color: '#a1887f' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#a1887f',
+                                font: { size: 12, weight: 'bold' },
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: '#f5ede8'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#a1887f',
+                                font: { size: 12 }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+                </text>
+        }
+    </script>
+}

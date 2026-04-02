@@ -56,7 +56,9 @@ html, body {
             background-color: rgba(0, 0, 0, 0.1);
         }
 
-        .nav-links a:active {
+        .nav-links a.active {
+            font-weight: 700;
+            border-left: 3px solid #382820;
             background-color: rgba(0, 0, 0, 0.1);
         }
 

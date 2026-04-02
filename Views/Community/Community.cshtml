@@ -12,8 +12,8 @@
 @Html.AntiForgeryToken()
 
 <section class="community-hero">
-    <div class="hero-left">
-        <h2>Reach.A.Paw Community Forum</h2>
+    <div class="hero-text">
+        <h2><span class="highlight">Reach.A.Paw</span> Community Forum</h2>
         <p>Connect with fellow pet lovers, share stories, tips, and support each other on the journey of adoption.</p>
     </div>
     <button class="btn-start-discussion" onclick="openPostModal()">Start a Discussion</button>
@@ -38,11 +38,11 @@
             {
                 @foreach (var post in Model)
                 {
-                    <div class="discussion-card">
+                    <div class="discussion-card" data-post-id="@post.community_id">
                         <div class="card-left">
                             <div class="user-avatar">@post.Users?.username[0]</div>
                         </div>
-                        <div class="card-content">
+                        <div class="card-content" onclick="openPostViewModal(@post.community_id)">
                             <div class="card-meta">
                                 <h4>@post.title</h4>
                                 <div class="meta-row">
@@ -52,10 +52,16 @@
                                 </div>
                             </div>
                             <p class="card-body">@post.post_content</p>
-                            <div class="card-actions">
-                                <span class="action-count"><i class="bi bi-heart"></i> 0</span>
-                                <span class="action-count"><i class="bi bi-chat"></i> 0</span>
-                            </div>
+                        </div>
+                        <div class="card-actions" onclick="event.stopPropagation()">
+                            <button class="action-btn like-btn" onclick="toggleLike(@post.community_id, this)" title="Like">
+                                <i class="bi bi-heart"></i>
+                                <span class="like-count">0</span>
+                            </button>
+                            <button class="action-btn comment-btn" onclick="openCommentModal(@post.community_id)" title="Comment">
+                                <i class="bi bi-chat"></i>
+                                <span class="comment-count">0</span>
+                            </button>
                         </div>
                     </div>
                 }
@@ -102,7 +108,42 @@
     </div>
 </div>
 
+<!-- View Post Modal -->
+<div class="modal-overlay" id="viewPostModalOverlay" onclick="closePostViewModal()"></div>
+
+<div class="view-post-modal" id="viewPostModal">
+    <div class="modal-header">
+        <button class="modal-close" onclick="closePostViewModal()">✕</button>
+    </div>
+    <div class="modal-body post-detail-content">
+        <div id="postDetailContent"></div>
+    </div>
+</div>
+
+<!-- Comment Modal -->
+<div class="modal-overlay" id="commentModalOverlay" onclick="closeCommentModal()"></div>
+
+<div class="comment-modal" id="commentModal">
+    <div class="modal-header">
+        <div>
+            <p class="modal-title">Comments</p>
+        </div>
+        <button class="modal-close" onclick="closeCommentModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div class="comments-section" id="commentsList"></div>
+
+        <div class="comment-input-section">
+            <textarea id="commentInput" placeholder="Write a comment..." rows="2"></textarea>
+            <button class="comment-submit" onclick="submitComment()">Post Comment</button>
+        </div>
+    </div>
+</div>
+
 <script>
+    let currentPostId = null;
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
     function openPostModal() {
         document.getElementById('postModalOverlay').style.display = 'block';
         document.getElementById('postModal').style.display = 'block';
@@ -129,7 +170,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                'RequestVerificationToken': token
             },
             body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&category_id=${category}`
         })
@@ -140,4 +181,249 @@
             }
         });
     }
+
+    // ============ LIKES ============
+    function toggleLike(postId, btn) {
+        fetch('/Community/ToggleLike', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `community_id=${postId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const card = document.querySelector(`[data-post-id="${postId}"]`);
+                const likeBtn = card.querySelector('.like-btn');
+                const likeCount = card.querySelector('.like-count');
+
+                likeCount.textContent = data.totalLikes;
+
+                if (data.liked) {
+                    likeBtn.classList.add('liked');
+                } else {
+                    likeBtn.classList.remove('liked');
+                }
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function loadPostLikes(postId) {
+        fetch(`/Community/IsPostLiked?community_id=${postId}`)
+        .then(res => res.json())
+        .then(data => {
+            const card = document.querySelector(`[data-post-id="${postId}"]`);
+            const likeBtn = card.querySelector('.like-btn');
+            const likeCount = card.querySelector('.like-count');
+
+            likeCount.textContent = data.totalLikes;
+            if (data.liked) {
+                likeBtn.classList.add('liked');
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    // ============ VIEW POST ============
+    function openPostViewModal(postId) {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        const title = card.querySelector('.card-meta h4').textContent;
+        const content = card.querySelector('.card-body').textContent;
+        const username = card.querySelector('.username').textContent;
+        const category = card.querySelector('.cat-badge').textContent;
+        const time = card.querySelector('.time').textContent;
+        const likeCount = card.querySelector('.like-count').textContent;
+        const commentCount = card.querySelector('.comment-count').textContent;
+        const likeBtn = card.querySelector('.like-btn');
+        const isLiked = likeBtn.classList.contains('liked');
+
+        document.getElementById('postDetailContent').innerHTML = `
+            <div class="post-detail">
+                <div class="post-detail-header">
+                    <h2>${title}</h2>
+                    <div class="post-detail-meta">
+                        <span class="cat-badge">${category}</span>
+                        <span class="username">${username}</span>
+                        <span class="time">${time}</span>
+                    </div>
+                </div>
+                <div class="post-detail-body">
+                    ${content}
+                </div>
+                <div class="post-detail-actions">
+                    <button class="post-action-btn like-action ${isLiked ? 'liked' : ''}" onclick="toggleLike(${postId}, this); updatePostModal(${postId})">
+                        <i class="bi bi-heart"></i>
+                        <span class="action-count">${likeCount}</span>
+                    </button>
+                    <button class="post-action-btn comment-action" onclick="closePostViewModal(); openCommentModal(${postId})">
+                        <i class="bi bi-chat"></i>
+                        <span class="action-count">${commentCount}</span>
+                    </button>
+                    <button class="post-action-btn delete-action" onclick="deletePost(${postId})">
+                        <i class="bi bi-trash"></i>
+                        <span class="action-count">Delete</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewPostModalOverlay').style.display = 'block';
+        document.getElementById('viewPostModal').style.display = 'block';
+    }
+
+    function updatePostModal(postId) {
+        const card = document.querySelector(`[data-post-id="${postId}"]`);
+        const likeCount = card.querySelector('.like-count').textContent;
+        const likeBtn = document.querySelector('.post-detail-actions .like-action');
+        if (likeBtn) {
+            likeBtn.querySelector('.action-count').textContent = likeCount;
+        }
+    }
+
+    function closePostViewModal() {
+        document.getElementById('viewPostModalOverlay').style.display = 'none';
+        document.getElementById('viewPostModal').style.display = 'none';
+    }
+    function openCommentModal(postId) {
+        currentPostId = postId;
+        document.getElementById('commentModalOverlay').style.display = 'block';
+        document.getElementById('commentModal').style.display = 'block';
+        document.getElementById('commentInput').value = '';
+        loadComments(postId);
+    }
+
+    function closeCommentModal() {
+        document.getElementById('commentModalOverlay').style.display = 'none';
+        document.getElementById('commentModal').style.display = 'none';
+        currentPostId = null;
+    }
+
+    function loadComments(postId) {
+        fetch(`/Community/GetComments?community_id=${postId}`)
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('commentsList');
+
+            if (data.success && data.comments && data.comments.length > 0) {
+                container.innerHTML = data.comments.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <strong>${comment.username}</strong>
+                            <span class="comment-date">${comment.date}</span>
+                        </div>
+                        <p class="comment-text">${comment.text}</p>
+                        <button class="comment-delete" onclick="deleteComment(${comment.comment_id})">Delete</button>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>';
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    function submitComment() {
+        const comment = document.getElementById('commentInput').value.trim();
+
+        if (!comment) {
+            alert('Please write a comment');
+            return;
+        }
+
+        if (!currentPostId) {
+            alert('Post ID is missing');
+            return;
+        }
+
+        fetch('/Community/AddComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `community_id=${currentPostId}&comment=${encodeURIComponent(comment)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('commentInput').value = '';
+
+                // Update comment count
+                const card = document.querySelector(`[data-post-id="${currentPostId}"]`);
+                const commentCount = card.querySelector('.comment-count');
+                commentCount.textContent = data.totalComments;
+
+                loadComments(currentPostId);
+            } else {
+                alert(data.message || 'Error adding comment');
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('Error adding comment');
+        });
+    }
+
+    function deleteComment(commentId) {
+        if (!confirm('Delete this comment?')) return;
+
+        fetch('/Community/DeleteComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `comment_id=${commentId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadComments(currentPostId);
+            } else {
+                alert(data.message || 'Error deleting comment');
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+        function deletePost(postId) {
+        if (!confirm("Are you sure you want to delete this post?")) return;
+
+        fetch('/Community/DeletePost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: `community_id=${postId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Close modal
+                closePostViewModal();
+
+                // Remove card from UI
+                const card = document.querySelector(`[data-post-id="${postId}"]`);
+                if (card) card.remove();
+            } else {
+                alert(data.message || "Error deleting post");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Something went wrong");
+        });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-post-id]').forEach(card => {
+            const postId = card.dataset.postId;
+            loadPostLikes(postId);
+        });
+    });
 </script>

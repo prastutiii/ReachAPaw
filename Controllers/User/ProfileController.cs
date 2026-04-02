@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http; // Required for session access
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReachAPaw.Data;
 using ReachAPaw.Filters;
 using ReachAPaw.Models;
@@ -22,9 +23,16 @@ public class ProfileController : Controller
         var user = _context.Users.FirstOrDefault(u => u.user_id == userId);
 
         if (user == null)
-        {
             return NotFound();
-        }
+
+        //User's community posts
+        var posts = _context.Community
+            .Where(c => c.user_id == userId)
+            .Include(p => p.Categories)
+            .OrderByDescending(c => c.created_at)
+            .ToList();
+
+        ViewBag.UserPosts = posts;
 
         return View(user);
     }

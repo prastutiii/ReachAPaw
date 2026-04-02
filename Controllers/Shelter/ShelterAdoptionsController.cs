@@ -24,30 +24,49 @@ namespace ReachAPaw.Controllers
             if (shelterId == null)
                 return RedirectToAction("Login", "Authentication");
 
-            var adoptions = _context.AdoptionApplications
-                                    .Include(a => a.ApplicationDetails)
-                                    .Include(a => a.Pets)
-                                    .Include(a => a.Users)
-                                    .Where(a => a.shelter_id == shelterId)
-                                    .OrderByDescending(a => a.applied_date)
-                                    .ToList();
+            try
+            {
+                var adoptions = _context.AdoptionApplications
+                                        .Include(a => a.ApplicationDetails)
+                                        .Include(a => a.Pets)
+                                        .Include(a => a.Users)
+                                        .Where(a => a.shelter_id == shelterId)
+                                        .ToList()
+                                        .OrderByDescending(a => a.applied_date)
+                                        .ToList();
 
-            return View(adoptions);
+                return View(adoptions);
+            }
+            catch (Exception ex)
+            {
+                // Handle null reference exception
+                var adoptions = _context.AdoptionApplications
+                                        .Where(a => a.shelter_id == shelterId)
+                                        .ToList();
+
+                return View(adoptions ?? new List<AdoptionApplicationModel>());
+            }
         }
 
         public IActionResult ViewAdoptions(int id)
         {
-            var adoption = _context.AdoptionApplications
-                                   .Include(a => a.ApplicationDetails)
-                                   .Include(a => a.Pets)
-                                   .Include(a => a.Users)
-                                   .FirstOrDefault(a => a.adoption_id == id);
+            try
+            {
+                var adoption = _context.AdoptionApplications
+                                       .Include(a => a.ApplicationDetails)
+                                       .Include(a => a.Pets)
+                                       .Include(a => a.Users)
+                                       .FirstOrDefault(a => a.adoption_id == id);
 
-            if (adoption == null)
+                if (adoption == null)
+                    return NotFound();
+
+                return View(adoption);
+            }
+            catch (Exception ex)
+            {
                 return NotFound();
-
-
-            return View(adoption);
+            }
         }
 
         public IActionResult ApproveAdoption(int id)
