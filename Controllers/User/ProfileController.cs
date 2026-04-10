@@ -48,7 +48,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public IActionResult UpdateProfile(UserModel updatedUser, IFormFile pfpFile)
+    public IActionResult EditProfile(UserModel updatedUser, IFormFile pfpFile)
     {
         var userInDb = _context.Users.FirstOrDefault(u => u.user_id == updatedUser.user_id);
 

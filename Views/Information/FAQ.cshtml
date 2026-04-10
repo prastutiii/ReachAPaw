@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "FAQs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/css/user/information.css" />
+
+<div class="static-hero">
+    <h1>Frequently Asked Questions</h1>
+    <p>Answers to the most common questions about adopting through Reach.A.Paw.</p>
+</div>
+
+<div class="static-body">
+    <div class="faq-list">
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Is it free to create an account and apply?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Yes — creating an account and submitting adoption applications is completely free. You only pay the adoption fee after your application has been approved by the shelter.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                How long does the approval process take?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Most shelters review applications within 1–3 business days. You'll receive a notification as soon as your status changes. You can also check your application status anytime from My Adoptions.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Can I apply for more than one pet at a time?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Yes, you can apply for multiple pets simultaneously. However, each application is reviewed independently by the respective shelter.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                What does the adoption fee cover?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>The adoption fee covers vaccination records, microchip registration, a first vet visit voucher, a starter pet supplies kit, and a 30-day health guarantee. Fees vary by shelter and pet.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Can I cancel my application?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Yes — you can cancel a pending or approved application before completing payment. Once payment is made and the adoption is completed, it cannot be cancelled.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                How do I schedule a visit to a shelter?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Go to the Shelters page, find your shelter of choice, and click "Schedule a Visit". Fill in your name, phone, preferred date, time, and reason. No account needed to schedule a visit.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Are the pets health-checked before listing?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Yes — all pets listed on Reach.A.Paw are health-checked by their respective shelters. You can see each pet's vaccination, neutering, and microchip status on their profile.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                What happens after I complete payment?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>After payment, your adoption status moves to "Completed" and you receive a digital Adoption Certificate with a unique ID. The shelter will then arrange delivery or pickup of your new pet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFaq(btn) {
+        const answer  = btn.nextElementSibling;
+        const icon    = btn.querySelector('.faq-icon');
+        const isOpen  = answer.style.maxHeight;
+
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = null);
+        document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+
+        if (!isOpen) {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            icon.textContent = '−';
+        }
+    }
+</script>

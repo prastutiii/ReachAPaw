@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReachAPaw.Models;
 using ReachAPaw.Data;
+using ReachAPaw.Services;
 
 namespace ReachAPaw.Controllers
 {
     public class AuthenticationController : Controller
     {
         private readonly RapDbContext _context;
+        private readonly EmailService _emailService;
 
-        public AuthenticationController(RapDbContext context)
+        public AuthenticationController(RapDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -91,6 +94,59 @@ namespace ReachAPaw.Controllers
                 return View();
             }
 
+            var otp = new Random().Next(100000, 999999).ToString();
+
+            HttpContext.Session.SetString("otp", otp);
+            HttpContext.Session.SetString("otp_email", email);
+            HttpContext.Session.SetString("otp_username", username);
+            HttpContext.Session.SetString("otp_password", password);
+            HttpContext.Session.SetString("otp_address", address);
+            HttpContext.Session.SetString("otp_phone", phone);
+            HttpContext.Session.SetString("otp_expiry", DateTime.Now.AddMinutes(10).ToString());
+
+            _emailService.SendOtp(email, otp);
+
+            return RedirectToAction("VerifyOtp");
+        }
+
+        [HttpGet]
+        public IActionResult VerifyOtp()
+        {
+            if (HttpContext.Session.GetString("otp_email") == null)
+                return RedirectToAction("Register");
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult VerifyOtp(string otp)
+        {
+            var savedOtp = HttpContext.Session.GetString("otp");
+            var expiry = HttpContext.Session.GetString("otp_expiry");
+            var email = HttpContext.Session.GetString("otp_email");
+            var username = HttpContext.Session.GetString("otp_username");
+            var password = HttpContext.Session.GetString("otp_password");
+            var address = HttpContext.Session.GetString("otp_address");
+            var phone = HttpContext.Session.GetString("otp_phone");
+
+            if (savedOtp == null || email == null)
+            {
+                ViewBag.Error = "Session expired. Please register again.";
+                return View();
+            }
+
+            if (DateTime.Now > DateTime.Parse(expiry))
+            {
+                ViewBag.Error = "OTP has expired. Please register again.";
+                return RedirectToAction("Register");
+            }
+
+            if (otp != savedOtp)
+            {
+                ViewBag.Error = "Invalid OTP. Please try again.";
+                return View();
+            }
+
             var user = new UserModel
             {
                 username = username,
@@ -104,11 +160,35 @@ namespace ReachAPaw.Controllers
             _context.Users.Add(user);
             _context.SaveChanges();
 
+            HttpContext.Session.Remove("otp");
+            HttpContext.Session.Remove("otp_email");
+            HttpContext.Session.Remove("otp_username");
+            HttpContext.Session.Remove("otp_password");
+            HttpContext.Session.Remove("otp_address");
+            HttpContext.Session.Remove("otp_phone");
+            HttpContext.Session.Remove("otp_expiry");
+
             HttpContext.Session.SetInt32("user_id", user.user_id);
             HttpContext.Session.SetString("user_name", user.username);
             HttpContext.Session.SetString("user_role", user.role);
 
             return RedirectToAction("Home", "Home");
+        }
+
+        public IActionResult ResendOtp()
+        {
+            var email = HttpContext.Session.GetString("otp_email");
+            if (email == null)
+                return RedirectToAction("Register");
+
+            var otp = new Random().Next(100000, 999999).ToString();
+            HttpContext.Session.SetString("otp", otp);
+            HttpContext.Session.SetString("otp_expiry", DateTime.Now.AddMinutes(10).ToString());
+
+            _emailService.SendOtp(email, otp);
+
+            ViewBag.Success = "A new OTP has been sent to your email.";
+            return View("VerifyOtp");
         }
     }
 }

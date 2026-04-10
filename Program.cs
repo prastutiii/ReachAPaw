@@ -33,6 +33,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddScoped<ReachAPaw.Services.EmailService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

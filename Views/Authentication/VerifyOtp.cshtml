@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "VerifyOtp";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/user/authentication.css" />
+
+<div class="auth-container">
+    <img src="~/assets/logo.png" class="logo-img" alt="Logo" />
+    <h2>Verify Your Email</h2>
+    <p>We've sent a 6-digit OTP to <strong>@ViewBag.Email</strong></p>
+
+    <form asp-controller="Authentication" asp-action="VerifyOtp" method="post">
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>Enter OTP</label>
+                <input type="text" name="otp" placeholder="000000" maxlength="6"
+                       style="text-align: center; font-size: 1.5rem; letter-spacing: 8px;" required />
+            </div>
+        </div>
+        <button type="submit" class="btn-submit">Verify</button>
+    </form>
+
+    <p class="footer-text">
+        Didn't receive it?
+        <a asp-controller="Authentication" asp-action="ResendOtp">Resend OTP</a>
+    </p>
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red; font-weight:bold; margin-top: 10px;">@ViewBag.Error</p>
+    }
+
+    @if (ViewBag.Success != null)
+    {
+        <p style="color:green; font-weight:bold; margin-top: 10px;">@ViewBag.Success</p>
+    }
+
+    <p class="footer-text"><a asp-controller="Authentication" asp-action="Register">← Back to Register</a></p>
+</div>
