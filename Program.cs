@@ -33,6 +33,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+//Dependency Injection
 builder.Services.AddScoped<ReachAPaw.Services.EmailService>();
 
 var app = builder.Build();

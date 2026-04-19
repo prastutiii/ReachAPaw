@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ReachAPaw.Data;
 using ReachAPaw.Filters;
 using ReachAPaw.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Linq;
 
 [UserAuthorize]
@@ -48,50 +49,47 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public IActionResult EditProfile(UserModel updatedUser, IFormFile pfpFile)
+    public IActionResult EditProfile(UserModel updatedUser, IFormFile pfpFile, string password)
     {
         var userInDb = _context.Users.FirstOrDefault(u => u.user_id == updatedUser.user_id);
 
-        if (userInDb != null)
+        if (userInDb == null)
+            return NotFound();
+
+        if (pfpFile != null && pfpFile.Length > 0)
         {
-            // Handle PFP upload using your pet image logic
-            if (pfpFile != null && pfpFile.Length > 0)
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+            var extension = Path.GetExtension(pfpFile.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(extension))
             {
-                // Define path: wwwroot/images/users
-                string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
-                Directory.CreateDirectory(uploads);
-
-                // Generate unique filename
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(pfpFile.FileName);
-                string fullPath = Path.Combine(uploads, fileName);
-
-                try
-                {
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        pfpFile.CopyTo(stream);
-                    }
-
-                    // Store the relative path in the database
-                    userInDb.image_url = "/images/users/" + fileName;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("Exception while saving PFP: " + ex.Message);
-                }
+                ModelState.AddModelError("pfpFile", "Only image files are allowed (jpg, jpeg, png, gif, webp).");
+                return View(updatedUser);
             }
 
-            // Update other fields
-            userInDb.username = updatedUser.username;
-            userInDb.email = updatedUser.email;
-            userInDb.address = updatedUser.address;
-            userInDb.phone = updatedUser.phone;
-            userInDb.password = updatedUser.password;
+            string uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
+            Directory.CreateDirectory(uploads);
+            string fileName = Guid.NewGuid().ToString() + extension;
 
-            _context.SaveChanges();
-            return RedirectToAction("Profile");
+            using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                pfpFile.CopyTo(stream);
+
+            userInDb.image_url = "/images/users/" + fileName;
         }
 
-        return NotFound();
+        userInDb.username = updatedUser.username;
+        userInDb.email = updatedUser.email;
+        userInDb.address = updatedUser.address;
+        userInDb.phone = updatedUser.phone;
+
+        if (!string.IsNullOrEmpty(password))
+        {
+            var hasher = new PasswordHasher<UserModel>();
+            userInDb.password = hasher.HashPassword(null, password);
+        }
+
+        _context.SaveChanges();
+        return RedirectToAction("Profile");
     }
+
 }

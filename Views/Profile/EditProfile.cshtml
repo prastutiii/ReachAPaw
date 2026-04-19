@@ -61,9 +61,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Password</label>
-                        <input type="text" asp-for="password" class="form-control border-dark" />
+                        <label class="form-label fw-bold">New Password <span class="optional">(leave blank to keep current)</span></label>
+                        <input type="text" name="password" class="form-control border-dark" placeholder="Enter new password" />
                     </div>
+
 
                     <div class="text-center mb-3">
                         <div class="border border-dark d-inline-block overflow-hidden" style="width: 200px; height: 150px;">
@@ -81,6 +82,12 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Upload New Profile Picture</label>
                         <input type="file" name="pfpFile" class="form-control border-dark" accept="image/*" />
+                        @if (ViewData.ModelState["pfpFile"]?.Errors.Count > 0)
+                        {
+                            <p style="color: #c62828; font-size: 0.83rem; margin-top: 6px;">
+                                @ViewData.ModelState["pfpFile"].Errors[0].ErrorMessage
+                            </p>
+                        }
                     </div>
 
                     <div class="d-flex justify-content-end mt-4">

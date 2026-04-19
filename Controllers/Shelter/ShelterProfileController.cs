@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ReachAPaw.Data;
 using ReachAPaw.Filters;
 using ReachAPaw.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ReachAPaw.Controllers
 {
@@ -68,7 +69,10 @@ namespace ReachAPaw.Controllers
             user.username = username;
             user.email = login_email;
             if (!string.IsNullOrEmpty(password))
-                user.password = password;
+            {
+                var hasher = new PasswordHasher<UserModel>();
+                user.password = hasher.HashPassword(null, password);
+            }
 
             // update shelter
             shelter.shelter_name = shelter_name;

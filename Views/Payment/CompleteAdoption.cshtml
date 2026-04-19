@@ -24,7 +24,7 @@
     <div class="payment-layout">
 
         <div class="payment-left">
-            <form asp-controller="CompleteAdoption" asp-action="Payment" asp-route-id="@Model.adoption_id" method="post" id="payment-form">
+            <form asp-controller="Payment" asp-action="CompleteAdoption" asp-route-id="@Model.adoption_id" method="post">
 
                 <div class="form-card">
                     <h4>Choose your payment method</h4>

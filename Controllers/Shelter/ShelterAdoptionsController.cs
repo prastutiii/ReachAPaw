@@ -37,7 +37,7 @@ namespace ReachAPaw.Controllers
 
                 return View(adoptions);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Handle null reference exception
                 var adoptions = _context.AdoptionApplications
@@ -63,7 +63,7 @@ namespace ReachAPaw.Controllers
 
                 return View(adoption);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return NotFound();
             }

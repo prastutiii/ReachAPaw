@@ -4,6 +4,7 @@ using ReachAPaw.Data;
 using ReachAPaw.Models;
 using ReachAPaw.Filters;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
 namespace ReachAPaw.Controllers.Admin
 {
@@ -88,13 +89,15 @@ namespace ReachAPaw.Controllers.Admin
                     userFileName = "/images/users/" + userFileName;
                 }
 
+                var hasher = new PasswordHasher<UserModel>();
+
                 var user = new UserModel
                 {
                     username = username,
                     email = email,
                     phone = phone,
                     address = address,
-                    password = password,
+                    password = hasher.HashPassword(null, password),
                     role = string.IsNullOrEmpty(role) ? "User" : role,
                     status = string.IsNullOrEmpty(status) ? "Active" : status,
                     image_url = userFileName
@@ -177,7 +180,8 @@ namespace ReachAPaw.Controllers.Admin
                 // Update password only if provided
                 if (!string.IsNullOrEmpty(password))
                 {
-                    user.password = password;
+                    var hasher = new PasswordHasher<UserModel>();
+                    user.password = hasher.HashPassword(null, password);
                 }
 
                 Debug.WriteLine($"Updating user: {user.username}");

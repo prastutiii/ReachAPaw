@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ReachAPaw.Models;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ReachAPaw.Data;
+using ReachAPaw.Models;
 using ReachAPaw.Services;
 
 namespace ReachAPaw.Controllers
@@ -28,10 +31,18 @@ namespace ReachAPaw.Controllers
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
                 var user = _context.Users
-                    .FirstOrDefault(u => u.email == email && u.password == password);
+                    .FirstOrDefault(u => u.email == email);
 
                 if (user != null)
                 {
+                    var hasher = new PasswordHasher<UserModel>();
+                    var result = hasher.VerifyHashedPassword(user, user.password, password);
+                    if (result == PasswordVerificationResult.Failed)
+                    {
+                        ViewBag.Error = "Invalid email or password";
+                        return View();
+                    }
+
                     HttpContext.Session.SetInt32("user_id", user.user_id);
                     HttpContext.Session.SetString("user_name", user.username);
                     HttpContext.Session.SetString("user_role", user.role);
@@ -75,6 +86,7 @@ namespace ReachAPaw.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Authentication");
         }
 
@@ -147,13 +159,15 @@ namespace ReachAPaw.Controllers
                 return View();
             }
 
+            var hasher = new PasswordHasher<UserModel>();
+
             var user = new UserModel
             {
                 username = username,
                 email = email,
                 address = address,
                 phone = phone,
-                password = password,
+                password = hasher.HashPassword(null, password),
                 role = "user",
                 status = "active"
             };

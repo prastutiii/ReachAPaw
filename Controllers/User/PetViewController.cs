@@ -10,7 +10,7 @@ namespace ReachAPaw.Controllers.User
     {
         private readonly RapDbContext _context;
 
-        // Dependency Injection for your Database Context
+        // Dependency Injection for Database Context
         public PetViewController(RapDbContext context)
         {
             _context = context;

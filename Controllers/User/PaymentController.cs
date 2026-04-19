@@ -16,6 +16,7 @@ namespace ReachAPaw.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult CompleteAdoption(int id)
         {
             var userId = HttpContext.Session.GetInt32("user_id");
@@ -50,18 +51,16 @@ namespace ReachAPaw.Controllers
 
                 var pet = _context.Pets.Find(adoption.pet_id);
                 if (pet != null)
-                {
                     pet.status = "Available";
-                }
 
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("MyAdoptions");
+            return RedirectToAction("MyAdoptions", "MyAdoptions");
         }
 
         [HttpPost]
-        public IActionResult Payment(int id, string method, string card_number, string card_name, string expiry, string cvv)
+        public IActionResult CompleteAdoption(int id, string method, string card_number, string card_name, string expiry, string cvv)
         {
             var userId = HttpContext.Session.GetInt32("user_id");
 
@@ -78,7 +77,6 @@ namespace ReachAPaw.Controllers
             var fee = double.TryParse(adoption.Pets?.fee, out var f) ? f : 0;
             var total = fee + 250 + 100;
 
-            // save payment first to get payment_id
             var payment = new PaymentModel
             {
                 amount = total,
@@ -89,7 +87,6 @@ namespace ReachAPaw.Controllers
             _context.Payments.Add(payment);
             _context.SaveChanges();
 
-            // save adoption record with payment_id
             var certificateNumber = $"PAW-{DateTime.Now.Year}-{id:D5}";
             var adoptionRecord = new AdoptionModel
             {
@@ -100,8 +97,11 @@ namespace ReachAPaw.Controllers
             };
             _context.Adoptions.Add(adoptionRecord);
 
-            // mark application as completed
             adoption.status = "Completed";
+
+            var pet = _context.Pets.Find(adoption.pet_id);
+            if (pet != null)
+                pet.status = "Adopted";
 
             _context.SaveChanges();
 

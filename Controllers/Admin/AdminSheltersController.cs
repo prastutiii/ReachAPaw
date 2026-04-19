@@ -4,6 +4,7 @@ using ReachAPaw.Data;
 using ReachAPaw.Models;
 using ReachAPaw.Filters;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
 namespace ReachAPaw.Controllers.Admin
 {
@@ -102,10 +103,13 @@ namespace ReachAPaw.Controllers.Admin
                 }
 
                 //Create User
+
+                var hasher = new PasswordHasher<UserModel>();
+
                 var user = new UserModel
                 {
                     username = username,
-                    password = password,
+                    password = hasher.HashPassword(null, password),
                     email = userEmail,
                     phone = userPhone,
                     address = userAddress,
@@ -228,7 +232,8 @@ namespace ReachAPaw.Controllers.Admin
                     // Update password only if provided
                     if (!string.IsNullOrEmpty(password))
                     {
-                        user.password = password;
+                        var hasher = new PasswordHasher<UserModel>();
+                        user.password = hasher.HashPassword(null, password);
                     }
 
                     // Update user image
